@@ -1,0 +1,111 @@
+
+RSpec.describe Protoboard::CircuitBreaker do
+
+  before { clean_circuits }
+
+  describe '.register_circuits' do
+    context 'when included' do
+      it 'adds singleton method register_circuits' do
+        my_class = Class.new
+        my_class.include described_class
+        expect(my_class).to respond_to(:register_circuits)
+      end
+    end
+
+    context 'with one circuit' do
+      it 'registers a circuit' do
+         class Foo1
+          include Protoboard::CircuitBreaker
+
+          register_circuits [:some_method],
+                            options: {
+                              service: 'my_cool_service',
+                              timeout: 1,
+                              open_after: 2,
+                              cool_off_after: 3
+                            }
+          def some_method
+            raise StandardError
+          end
+        end
+
+        expect(Protoboard::CircuitBreaker.registered_circuits.size).to eq(1)
+
+        circuit = Protoboard::CircuitBreaker.registered_circuits.first
+        expect(circuit).to be_a_circuit_with(
+                             name: 'my_cool_service#some_method',
+                             service: 'my_cool_service',
+                             method_name: :some_method,
+                             timeout: 1,
+                             open_after: 2,
+                             cool_off_after: 3
+                           )
+
+      end
+    end
+
+    context 'with two circuits' do
+      it 'resgisters two circuits' do
+        class Foo2
+          include Protoboard::CircuitBreaker
+
+          register_circuits [:some_method1, :some_method2],
+                            options: {
+                              service: 'my_cool_service',
+                              timeout: 1,
+                              open_after: 2,
+                              cool_off_after: 3
+                            }
+          def some_method1
+            raise StandardError
+          end
+
+          def some_method2
+            raise StandardError
+          end
+        end
+
+        expect(Protoboard::CircuitBreaker.registered_circuits.size).to eq(2)
+
+        circuit = Protoboard::CircuitBreaker.registered_circuits.first
+        expect(circuit).to be_a_circuit_with(
+                             name: 'my_cool_service#some_method1',
+                             service: 'my_cool_service',
+                             method_name: :some_method1,
+                             timeout: 1,
+                             open_after: 2,
+                             cool_off_after: 3
+                           )
+
+        circuit = Protoboard::CircuitBreaker.registered_circuits.last
+        expect(circuit).to be_a_circuit_with(
+                             name: 'my_cool_service#some_method2',
+                             service: 'my_cool_service',
+                             method_name: :some_method2,
+                             timeout: 1,
+                             open_after: 2,
+                             cool_off_after: 3
+                           )
+      end
+    end
+
+    it 'prepends a module to proxy requests' do
+      class FooService
+        include Protoboard::CircuitBreaker
+
+        register_circuits [:some_method],
+                          options: {
+                            service: 'my_cool_service',
+                            timeout: 1,
+                            open_after: 2,
+                            cool_off_after: 3
+                          }
+        def some_method
+          raise StandardError
+        end
+      end
+
+      expect(FooService.ancestors.first).to eq(Protoboard::FooServiceCircuitProxy)
+    end
+  end
+end

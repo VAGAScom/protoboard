@@ -1,5 +1,7 @@
 require "bundler/setup"
 require "protoboard"
+require_relative "./helpers/circuit_breaker_helpers"
+require_relative "./support/custom_matchers"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -11,4 +13,6 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.include CircuitBreakerHelpers
 end
