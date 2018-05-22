@@ -32,13 +32,19 @@ module Protoboard
 
       def create_circuits(method_names, options)
         method_names.map do |method_name|
-          circuit_name = "#{options[:service]}\##{method_name}"
+          circuit_name = "#{formatted_namespace}#{options[:service]}\##{method_name}"
           Circuit.new({name: circuit_name, method_name: method_name}.merge(options))
         end
       end
 
       def included(klass)
         klass.extend(ClassMethods)
+      end
+
+      private
+
+      def formatted_namespace
+        Protoboard.config.namespace.size > 0 ?  "#{Protoboard.config.namespace}/" : ''
       end
     end
   end

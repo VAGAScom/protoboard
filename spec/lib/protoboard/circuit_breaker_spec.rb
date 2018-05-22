@@ -13,8 +13,8 @@ RSpec.describe Protoboard::CircuitBreaker do
     end
 
     context 'with one circuit' do
-      it 'registers a circuit' do
-         class Foo1
+      let(:define_circuit_class) do
+        class Foo1
           include Protoboard::CircuitBreaker
 
           register_circuits [:some_method],
@@ -28,6 +28,10 @@ RSpec.describe Protoboard::CircuitBreaker do
             raise StandardError
           end
         end
+      end
+
+      it 'registers a circuit' do
+        define_circuit_class
 
         expect(Protoboard::CircuitBreaker.registered_circuits.size).to eq(1)
 
@@ -41,6 +45,26 @@ RSpec.describe Protoboard::CircuitBreaker do
                              cool_off_after: 3
                            )
 
+      end
+
+      context 'with a namespace' do
+        let(:namespace) { 'Foo' }
+
+        before { allow(Protoboard.config).to receive(:namespace).and_return(namespace) }
+
+        it 'registers a circuit' do
+          define_circuit_class
+
+          circuit = Protoboard::CircuitBreaker.registered_circuits.first
+          expect(circuit).to be_a_circuit_with(
+                               name: "#{namespace}/my_cool_service#some_method",
+                               service: 'my_cool_service',
+                               method_name: :some_method,
+                               timeout: 1,
+                               open_after: 2,
+                               cool_off_after: 3
+                             )
+        end
       end
     end
 

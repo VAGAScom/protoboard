@@ -20,5 +20,15 @@ RSpec.describe Protoboard do
       expect(Protoboard.config.adapter.redis_host).to eq('localhost')
       expect(Protoboard.config.adapter.redis_port).to eq(1234)
     end
+
+    context 'when passing a namespace' do
+      it 'configure the adapter and its options containing the namespace' do
+        Protoboard.configure do |config|
+          config.namespace = 'Foo'
+        end
+
+        expect(Protoboard.config.namespace).to eq('Foo')
+      end
+    end
   end
 end

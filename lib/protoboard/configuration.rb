@@ -3,6 +3,8 @@ module Protoboard
     extend Dry::Configurable
 
     setting :adapter, Protoboard::Adapters::StoplightAdapter, reader: true
+
+    setting :namespace, '', reader: true
   end
 end
 
