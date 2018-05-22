@@ -66,6 +66,39 @@ RSpec.describe Protoboard::CircuitBreaker do
                              )
         end
       end
+
+      context 'with a custom circuit name' do
+        let(:define_circuit_class) do
+          class Foo1
+            include Protoboard::CircuitBreaker
+
+            register_circuits({ some_method: 'my_custom_circuit_name' },
+                                options: {
+                                service: 'my_cool_service',
+                                timeout: 1,
+                                open_after: 2,
+                                cool_off_after: 3
+                              })
+            def some_method
+              raise StandardError
+            end
+          end
+        end
+
+        xit 'registers a circuit' do
+          define_circuit_class
+
+          circuit = Protoboard::CircuitBreaker.registered_circuits.first
+          expect(circuit).to be_a_circuit_with(
+                               name: "my_custom_circuit_name",
+                               service: 'my_cool_service',
+                               method_name: :some_method,
+                               timeout: 1,
+                               open_after: 2,
+                               cool_off_after: 3
+                             )
+        end
+      end
     end
 
     context 'with two circuits' do

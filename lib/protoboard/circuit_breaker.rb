@@ -1,9 +1,17 @@
 module Protoboard
   module CircuitBreaker
     module ClassMethods
-      def register_circuits(method_names, options:, fallback: nil)
+      def register_circuits(circuit_methods, options:, fallback: nil)
+        method_names = case circuit_methods
+        when Array
+          circuit_methods
+        when Hash
+          circuit_methods.keys.map(&:to_sym)
+        else
+          raise ArgumentError.new('Invalid input for circuit_methods')
+        end
 
-        circuits = Protoboard::CircuitBreaker.create_circuits(method_names, options.merge(fallback: fallback))
+        circuits = Protoboard::CircuitBreaker.create_circuits(circuit_methods, options.merge(fallback: fallback))
         circuits.each do |circuit|
           Protoboard::CircuitBreaker.add_circuit circuit
         end
