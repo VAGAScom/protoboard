@@ -2,22 +2,22 @@ RSpec.describe Protoboard::CircuitProxyFactory do
   describe '.create_module' do
     let(:circuit1) do
       Protoboard::Circuit.new(
-        name: 'my_cool_service#some_method', 
-        service: 'my_cool_service', 
-        method_name: 'some_method', 
-        timeout: 1, 
-        open_after: 2, 
+        name: 'my_cool_service#some_method',
+        service: 'my_cool_service',
+        method_name: 'some_method',
+        timeout: 1,
+        open_after: 2,
         cool_off_after: 3
       )
     end
 
     let(:circuit2) do
       Protoboard::Circuit.new(
-        name: 'my_cool_service#some_method2', 
-        service: 'my_cool_service', 
-        method_name: 'some_method2', 
-        timeout: 1, 
-        open_after: 2, 
+        name: 'my_cool_service#some_method2',
+        service: 'my_cool_service',
+        method_name: 'some_method2',
+        timeout: 1,
+        open_after: 2,
         cool_off_after: 3
       )
     end
@@ -29,6 +29,7 @@ RSpec.describe Protoboard::CircuitProxyFactory do
     let(:class_name) { 'FooBar' }
 
     subject(:create_module) { described_class.create_module(circuits, class_name) }
+
 
     it 'returns a module proxying the methods' do
       is_expected.to eq(Protoboard::FooBarCircuitProxy)

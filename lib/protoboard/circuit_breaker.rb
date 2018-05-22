@@ -1,9 +1,9 @@
 module Protoboard
   module CircuitBreaker
     module ClassMethods
-      def register_circuits(method_names, options:)
+      def register_circuits(method_names, options:, fallback: nil)
 
-        circuits = Protoboard::CircuitBreaker.create_circuits(method_names, options)
+        circuits = Protoboard::CircuitBreaker.create_circuits(method_names, options.merge(fallback: fallback))
         circuits.each do |circuit|
           Protoboard::CircuitBreaker.add_circuit circuit
         end

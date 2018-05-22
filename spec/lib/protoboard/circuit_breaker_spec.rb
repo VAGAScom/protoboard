@@ -107,5 +107,50 @@ RSpec.describe Protoboard::CircuitBreaker do
 
       expect(FooService.ancestors.first).to eq(Protoboard::FooServiceCircuitProxy)
     end
+
+    context 'with fallback' do
+      context 'when no error occurs' do
+        it 'doesnt call the fallback' do
+          class FooFallback1
+            include Protoboard::CircuitBreaker
+
+            register_circuits [:some_method],
+                              fallback: -> (e) { 'Not Nice' },
+                              options: {
+                                service: 'my_cool_fallback',
+                                timeout: 1,
+                                open_after: 2,
+                                cool_off_after: 3
+                              }
+            def some_method
+              'All Nice'
+            end
+          end
+
+          expect(FooFallback1.new.some_method).to eq('All Nice')
+        end
+      end
+      context 'when a error occurs' do
+        it 'calls the fallback' do
+          class FooFallback2
+            include Protoboard::CircuitBreaker
+
+            register_circuits [:some_method],
+                              fallback: -> (e) {  'Not Nice' },
+            options: {
+              service: 'my_cool_fallback2',
+              timeout: 1,
+              open_after: 2,
+              cool_off_after: 3
+            }
+            def some_method
+              raise StandardError
+            end
+          end
+
+          expect(FooFallback2.new.some_method).to eq('Not Nice')
+        end
+      end
+    end
   end
 end

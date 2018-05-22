@@ -1,5 +1,4 @@
 require 'stoplight'
-
 module Protoboard
   module Adapters
     class StoplightAdapter
@@ -30,13 +29,16 @@ module Protoboard
         def run_circuit(circuit, &block)
           prepare_data_store
 
-          Stoplight(circuit.name, &block)
-            .with_threshold(circuit.open_after)
-            .with_cool_off_time(circuit.cool_off_after)
-            .run
+          stoplight = Stoplight(circuit.name, &block)
+                        .with_threshold(circuit.open_after)
+                        .with_cool_off_time(circuit.cool_off_after)
+
+          stoplight.with_fallback &circuit.fallback if circuit.fallback
+          stoplight.run
         end
 
         private
+
         def prepare_data_store
           @data_store ||= case Configuration.config.data_store
                           when :redis

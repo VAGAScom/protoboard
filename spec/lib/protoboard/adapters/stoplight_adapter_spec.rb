@@ -4,11 +4,11 @@ RSpec.describe Protoboard::Adapters::StoplightAdapter do
 
     let(:circuit) do
       Protoboard::Circuit.new(
-        name: 'my_cool_service#some_method', 
-        service: 'my_cool_service', 
-        method_name: 'some_method', 
-        timeout: 1, 
-        open_after: 2, 
+        name: 'my_cool_service#some_method',
+        service: 'my_cool_service',
+        method_name: 'some_method',
+        timeout: 1,
+        open_after: 2,
         cool_off_after: 3
       )
     end
