@@ -11,4 +11,8 @@ module Protoboard
   def self.config
     Protoboard::Configuration
   end
+
+  def self.configure(&block)
+    config.configure(&block)
+  end
 end
