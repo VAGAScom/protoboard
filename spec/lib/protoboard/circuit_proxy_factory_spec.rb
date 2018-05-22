@@ -30,11 +30,22 @@ RSpec.describe Protoboard::CircuitProxyFactory do
 
     subject(:create_module) { described_class.create_module(circuits, class_name) }
 
+    context 'with a name containing no namespace' do
+      it 'returns a module proxying the methods' do
+        is_expected.to eq(Protoboard::FooBarCircuitProxy)
 
-    it 'returns a module proxying the methods' do
-      is_expected.to eq(Protoboard::FooBarCircuitProxy)
+        expect(subject.instance_methods).to include(:some_method, :some_method2)
+      end
+    end
 
-      expect(subject.instance_methods).to include(:some_method, :some_method2)
+    context 'with a class name containing namespace' do
+      let(:class_name) { 'Foo::Bar' }
+
+      it 'returns a module proxying the methods' do
+        is_expected.to eq(Protoboard::FooBarCircuitProxy)
+
+        expect(subject.instance_methods).to include(:some_method, :some_method2)
+      end
     end
 
     it 'defines a proxy for the given methods' do

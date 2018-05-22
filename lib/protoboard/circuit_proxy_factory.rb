@@ -19,7 +19,7 @@ module Protoboard
       private
 
       def infer_module_name(class_name)
-        "#{class_name}CircuitProxy"
+        "#{class_name.split('::').join('')}CircuitProxy"
       end
     end
   end
