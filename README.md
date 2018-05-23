@@ -54,3 +54,27 @@ The gem is available as open source under the terms of the [MIT License](https:/
       end
 ``
 
+
+
+--Global por circuit
+
+[:some_method1, :some_method2, :some_method3 ]
+
+register_circuits [:some_method, :some_method2, :some_method3],
+                  options: {
+                    service: 'my_cool_service',
+                    timeout: 1,
+                    open_after: 2,
+                    cool_off_after: 3
+                  },
+                  on_before: [->{}, ->{}],
+                  on_after: [->{}, ->{}]
+
+
+-- Global por App
+Protoboard.configure do |config|
+  config.callbacks.configure |callback| do
+    callback.before: [->{}, ->{}],
+    callback.after: [->{}, ->{}]
+  end
+end
