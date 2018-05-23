@@ -2,15 +2,6 @@ module Protoboard
   module CircuitBreaker
     module ClassMethods
       def register_circuits(circuit_methods, options:, fallback: nil)
-        method_names = case circuit_methods
-        when Array
-          circuit_methods
-        when Hash
-          circuit_methods.keys.map(&:to_sym)
-        else
-          raise ArgumentError.new('Invalid input for circuit_methods')
-        end
-
         circuits = Protoboard::CircuitBreaker.create_circuits(circuit_methods, options.merge(fallback: fallback))
         circuits.each do |circuit|
           Protoboard::CircuitBreaker.add_circuit circuit
@@ -38,10 +29,17 @@ module Protoboard
         CircuitProxyFactory.create_module(circuits, class_name)
       end
 
-      def create_circuits(method_names, options)
-        method_names.map do |method_name|
-          circuit_name = "#{formatted_namespace}#{options[:service]}\##{method_name}"
-          Circuit.new({name: circuit_name, method_name: method_name}.merge(options))
+      def create_circuits(circuit_methods, options)
+        circuit_hash = case circuit_methods
+                          when Array
+                            circuit_methods.reduce({}) { |memo, value| memo.merge(value.to_sym => "#{formatted_namespace}#{options[:service]}\##{value}") }
+                          when Hash
+                            circuit_methods
+                          else
+                            raise ArgumentError.new('Invalid input for circuit methods')
+                          end
+        circuit_hash.map do |circuit_method, circuit_name|
+          Circuit.new({name: circuit_name, method_name: circuit_method}.merge(options))
         end
       end
 

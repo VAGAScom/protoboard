@@ -85,7 +85,7 @@ RSpec.describe Protoboard::CircuitBreaker do
           end
         end
 
-        xit 'registers a circuit' do
+        it 'registers a circuit' do
           define_circuit_class
 
           circuit = Protoboard::CircuitBreaker.registered_circuits.first
