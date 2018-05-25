@@ -32,11 +32,17 @@ RSpec.describe Protoboard do
     end
 
     context 'when passing a list of callbacks' do
+      let(:callable_object) do
+        Class.new do
+          def call(_)
+          end
+        end.new
+      end
       it 'configure the callbacks' do
         Protoboard.configure do |config|
           config.callbacks.tap do |callback|
-            callback.before = [-> (_){}, -> (_) {}]
-            callback.after = [-> (_) {}, -> (_) {}]
+            callback.before = [callable_object, -> (_) {}]
+            callback.after = [callable_object, -> (_) {}]
           end
         end
 
@@ -47,16 +53,29 @@ RSpec.describe Protoboard do
       end
     end
 
-    context 'with invalid callback' do
-      xit 'raises a error' do
+    context 'with invalid before callback' do
+      it 'raises a error' do
         expect{
           Protoboard.configure do |config|
             config.callbacks.tap do |callback|
               callback.before = [-> {}]
-              callback.after = [-> {}]
+              callback.after = [-> (_) {}]
             end
           end
-        }.to raise_error
+        }.to raise_error(Protoboard::Errors::InvalidCallback)
+      end
+    end
+
+    context 'with invalid after callback' do
+      it 'raises a error' do
+        expect{
+          Protoboard.configure do |config|
+            config.callbacks.tap do |callback|
+              callback.before = [-> (_) {}]
+              callback.after = [-> () {}]
+            end
+          end
+        }.to raise_error(Protoboard::Errors::InvalidCallback)
       end
     end
   end
