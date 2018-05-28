@@ -100,40 +100,67 @@ RSpec.describe Protoboard::CircuitBreaker do
         end
       end
 
-      context 'with callbacks' do
+      context 'with valid callbacks' do
         let(:define_circuit_class) do
           class Foo1
             include Protoboard::CircuitBreaker
 
             register_circuits({ some_method: 'my_custom_circuit_name' },
+                                on_before: [-> (_){}, -> (_){}],
+                                on_after: [-> (_) {}, -> (_){}],
                                 options: {
-                                service: 'my_cool_service',
-                                timeout: 1,
-                                open_after: 2,
-                                cool_off_after: 3,
-                                on_before: [->{}, ->{}],
-                                on_after: [->{}, ->{}]
-                              })
+                                  service: 'my_cool_service',
+                                  timeout: 1,
+                                  open_after: 2,
+                                  cool_off_after: 3,
+                                }
+                             )
             def some_method
               raise StandardError
             end
           end
         end
 
-        xit 'registers a circuit' do
+        it 'registers a circuit' do
           define_circuit_class
 
           circuit = Protoboard::CircuitBreaker.registered_circuits.first
           expect(circuit).to be_a_circuit_with(
-                               name: "my_cool_service#some_method",
+                               name: "my_custom_circuit_name",
                                service: 'my_cool_service',
                                method_name: :some_method,
                                timeout: 1,
                                open_after: 2,
                                cool_off_after: 3,
-                               on_before: [->{}, ->{}],
-                               on_after: [->{}, ->{}]
+                               on_before: [-> (_) {}, -> (_){}],
+                               on_after: [-> (_) {}, -> (_){}]
                              )
+        end
+      end
+
+      context 'with invalid callbacks' do
+        let(:define_circuit_class) do
+          class Foo1
+            include Protoboard::CircuitBreaker
+
+            register_circuits({ some_method: 'my_custom_circuit_name' },
+                              on_before: [1, ->{}],
+                              on_after: [->{}, 'not_a_callback'],
+                              options: {
+                                service: 'my_cool_service',
+                                timeout: 1,
+                                open_after: 2,
+                                cool_off_after: 3,
+                              }
+                             )
+            def some_method
+              raise StandardError
+            end
+          end
+        end
+
+        it 'raises a error' do
+          expect { define_circuit_class }.to raise_error(Protoboard::Errors::InvalidCallback)
         end
       end
     end
