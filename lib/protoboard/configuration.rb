@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Protoboard
   class Configuration
     extend Dry::Configurable
@@ -7,4 +9,3 @@ module Protoboard
     setting :namespace, '', reader: true
   end
 end
-

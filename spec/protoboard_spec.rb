@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 RSpec.describe Protoboard do
-  it "has a version number" do
+  it 'has a version number' do
     expect(Protoboard::VERSION).not_to be nil
   end
 
@@ -35,8 +37,8 @@ RSpec.describe Protoboard do
       xit 'configure the callbacks' do
         Protoboard.configure do |config|
           config.callbacks.configure do |callback|
-            callback.before = [-> (_){}, -> (_) {}]
-            callback.after = [-> (_) {}, -> (_) {}]
+            callback.before = [->(_) {}, ->(_) {}]
+            callback.after = [->(_) {}, ->(_) {}]
           end
         end
 

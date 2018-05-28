@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Protoboard
   class Circuit
     attr_reader :name, :service,
@@ -13,9 +15,8 @@ module Protoboard
       @open_after = options.fetch(:open_after)
       @cool_off_after = options.fetch(:cool_off_after)
       @fallback = options[:fallback]
-
     rescue KeyError => e
-      raise ArgumentError.new("Missing required arguments: #{e.message}")
+      raise ArgumentError, "Missing required arguments: #{e.message}"
     end
   end
 end

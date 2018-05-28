@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Protoboard::Adapters::StoplightAdapter do
   describe '.run_circuit' do
     subject(:run_circuit) { Protoboard.config.adapter.run_circuit(circuit) { some_object.some_method } }
@@ -33,7 +35,7 @@ RSpec.describe Protoboard::Adapters::StoplightAdapter do
       end
 
       it 'returns the value' do
-        expect{subject}.to raise_error(StandardError)
+        expect { subject }.to raise_error(StandardError)
       end
     end
 
@@ -43,7 +45,13 @@ RSpec.describe Protoboard::Adapters::StoplightAdapter do
       end
 
       it 'closes the circuit' do
-        circuit.open_after.times { run_circuit rescue nil }
+        circuit.open_after.times do
+          begin
+                                     run_circuit
+                                   rescue StandardError
+                                     nil
+                                   end
+        end
 
         expect { run_circuit }.to raise_error(Stoplight::Error::RedLight)
       end

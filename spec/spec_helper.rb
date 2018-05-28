@@ -1,11 +1,13 @@
-require "bundler/setup"
-require "protoboard"
-require_relative "./helpers/circuit_breaker_helpers"
-require_relative "./support/custom_matchers"
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'protoboard'
+require_relative './helpers/circuit_breaker_helpers'
+require_relative './support/custom_matchers'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
-  config.example_status_persistence_file_path = ".rspec_status"
+  config.example_status_persistence_file_path = '.rspec_status'
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!

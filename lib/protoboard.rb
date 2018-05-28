@@ -1,11 +1,13 @@
-require 'dry-configurable'
-require "protoboard/adapters/stoplight_adapter"
+# frozen_string_literal: true
 
-require "protoboard/version"
-require "protoboard/configuration"
-require "protoboard/circuit_breaker"
-require "protoboard/circuit"
-require "protoboard/circuit_proxy_factory"
+require 'dry-configurable'
+require 'protoboard/adapters/stoplight_adapter'
+
+require 'protoboard/version'
+require 'protoboard/configuration'
+require 'protoboard/circuit_breaker'
+require 'protoboard/circuit'
+require 'protoboard/circuit_proxy_factory'
 
 module Protoboard
   def self.config

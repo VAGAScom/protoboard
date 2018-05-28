@@ -1,6 +1,7 @@
 
-RSpec.describe Protoboard::CircuitBreaker do
+# frozen_string_literal: true
 
+RSpec.describe Protoboard::CircuitBreaker do
   before { clean_circuits }
 
   describe '.register_circuits' do
@@ -37,14 +38,13 @@ RSpec.describe Protoboard::CircuitBreaker do
 
         circuit = Protoboard::CircuitBreaker.registered_circuits.first
         expect(circuit).to be_a_circuit_with(
-                             name: 'my_cool_service#some_method',
-                             service: 'my_cool_service',
-                             method_name: :some_method,
-                             timeout: 1,
-                             open_after: 2,
-                             cool_off_after: 3
-                           )
-
+          name: 'my_cool_service#some_method',
+          service: 'my_cool_service',
+          method_name: :some_method,
+          timeout: 1,
+          open_after: 2,
+          cool_off_after: 3
+        )
       end
 
       context 'with a namespace' do
@@ -57,13 +57,13 @@ RSpec.describe Protoboard::CircuitBreaker do
 
           circuit = Protoboard::CircuitBreaker.registered_circuits.first
           expect(circuit).to be_a_circuit_with(
-                               name: "#{namespace}/my_cool_service#some_method",
-                               service: 'my_cool_service',
-                               method_name: :some_method,
-                               timeout: 1,
-                               open_after: 2,
-                               cool_off_after: 3
-                             )
+            name: "#{namespace}/my_cool_service#some_method",
+            service: 'my_cool_service',
+            method_name: :some_method,
+            timeout: 1,
+            open_after: 2,
+            cool_off_after: 3
+          )
         end
       end
 
@@ -73,7 +73,7 @@ RSpec.describe Protoboard::CircuitBreaker do
             include Protoboard::CircuitBreaker
 
             register_circuits({ some_method: 'my_custom_circuit_name' },
-                                options: {
+                              options: {
                                 service: 'my_cool_service',
                                 timeout: 1,
                                 open_after: 2,
@@ -90,13 +90,13 @@ RSpec.describe Protoboard::CircuitBreaker do
 
           circuit = Protoboard::CircuitBreaker.registered_circuits.first
           expect(circuit).to be_a_circuit_with(
-                               name: "my_custom_circuit_name",
-                               service: 'my_cool_service',
-                               method_name: :some_method,
-                               timeout: 1,
-                               open_after: 2,
-                               cool_off_after: 3
-                             )
+            name: 'my_custom_circuit_name',
+            service: 'my_cool_service',
+            method_name: :some_method,
+            timeout: 1,
+            open_after: 2,
+            cool_off_after: 3
+          )
         end
       end
 
@@ -106,13 +106,13 @@ RSpec.describe Protoboard::CircuitBreaker do
             include Protoboard::CircuitBreaker
 
             register_circuits({ some_method: 'my_custom_circuit_name' },
-                                options: {
+                              options: {
                                 service: 'my_cool_service',
                                 timeout: 1,
                                 open_after: 2,
                                 cool_off_after: 3,
-                                on_before: [->{}, ->{}],
-                                on_after: [->{}, ->{}]
+                                on_before: [-> {}, -> {}],
+                                on_after: [-> {}, -> {}]
                               })
             def some_method
               raise StandardError
@@ -125,15 +125,15 @@ RSpec.describe Protoboard::CircuitBreaker do
 
           circuit = Protoboard::CircuitBreaker.registered_circuits.first
           expect(circuit).to be_a_circuit_with(
-                               name: "my_cool_service#some_method",
-                               service: 'my_cool_service',
-                               method_name: :some_method,
-                               timeout: 1,
-                               open_after: 2,
-                               cool_off_after: 3,
-                               on_before: [->{}, ->{}],
-                               on_after: [->{}, ->{}]
-                             )
+            name: 'my_cool_service#some_method',
+            service: 'my_cool_service',
+            method_name: :some_method,
+            timeout: 1,
+            open_after: 2,
+            cool_off_after: 3,
+            on_before: [-> {}, -> {}],
+            on_after: [-> {}, -> {}]
+          )
         end
       end
     end
@@ -143,7 +143,7 @@ RSpec.describe Protoboard::CircuitBreaker do
         class Foo2
           include Protoboard::CircuitBreaker
 
-          register_circuits [:some_method1, :some_method2],
+          register_circuits %i[some_method1 some_method2],
                             options: {
                               service: 'my_cool_service',
                               timeout: 1,
@@ -163,23 +163,23 @@ RSpec.describe Protoboard::CircuitBreaker do
 
         circuit = Protoboard::CircuitBreaker.registered_circuits.first
         expect(circuit).to be_a_circuit_with(
-                             name: 'my_cool_service#some_method1',
-                             service: 'my_cool_service',
-                             method_name: :some_method1,
-                             timeout: 1,
-                             open_after: 2,
-                             cool_off_after: 3
-                           )
+          name: 'my_cool_service#some_method1',
+          service: 'my_cool_service',
+          method_name: :some_method1,
+          timeout: 1,
+          open_after: 2,
+          cool_off_after: 3
+        )
 
         circuit = Protoboard::CircuitBreaker.registered_circuits.last
         expect(circuit).to be_a_circuit_with(
-                             name: 'my_cool_service#some_method2',
-                             service: 'my_cool_service',
-                             method_name: :some_method2,
-                             timeout: 1,
-                             open_after: 2,
-                             cool_off_after: 3
-                           )
+          name: 'my_cool_service#some_method2',
+          service: 'my_cool_service',
+          method_name: :some_method2,
+          timeout: 1,
+          open_after: 2,
+          cool_off_after: 3
+        )
       end
     end
 
@@ -209,7 +209,7 @@ RSpec.describe Protoboard::CircuitBreaker do
             include Protoboard::CircuitBreaker
 
             register_circuits [:some_method],
-                              fallback: -> (e) { 'Not Nice' },
+                              fallback: ->(_e) { 'Not Nice' },
                               options: {
                                 service: 'my_cool_fallback',
                                 timeout: 1,
@@ -230,13 +230,13 @@ RSpec.describe Protoboard::CircuitBreaker do
             include Protoboard::CircuitBreaker
 
             register_circuits [:some_method],
-                              fallback: -> (e) {  'Not Nice' },
-            options: {
-              service: 'my_cool_fallback2',
-              timeout: 1,
-              open_after: 2,
-              cool_off_after: 3
-            }
+                              fallback: ->(_e) { 'Not Nice' },
+                              options: {
+                                service: 'my_cool_fallback2',
+                                timeout: 1,
+                                open_after: 2,
+                                cool_off_after: 3
+                              }
             def some_method
               raise StandardError
             end
