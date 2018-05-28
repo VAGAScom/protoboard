@@ -1,0 +1,22 @@
+AllCops:
+  TargetRubyVersion: 2.3
+
+Documentation:
+  Enabled: false
+
+AsciiComments:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+    - protoboard.gemspec
+
+Metrics/MethodLength:
+  Max: 15
