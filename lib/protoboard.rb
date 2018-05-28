@@ -1,4 +1,6 @@
 require 'dry-configurable'
+require 'protoboard/circuit_execution'
+require 'protoboard/adapters/base_adapter'
 require 'protoboard/adapters/stoplight_adapter'
 
 require 'protoboard/version'
