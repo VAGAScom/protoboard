@@ -11,8 +11,6 @@ require 'protoboard/circuit'
 require 'protoboard/circuit_proxy_factory'
 require 'protoboard/errors/invalid_callback'
 
-require 'byebug'
-
 module Protoboard
   def self.config
     Protoboard::Configuration
