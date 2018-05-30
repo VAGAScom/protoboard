@@ -3,6 +3,7 @@ module Protoboard
     attr_reader :name, :service,
                 :method_name, :timeout,
                 :open_after, :cool_off_after,
+                :on_before, :on_after,
                 :fallback
 
     def initialize(**options)
@@ -13,6 +14,8 @@ module Protoboard
       @open_after = options.fetch(:open_after)
       @cool_off_after = options.fetch(:cool_off_after)
       @fallback = options[:fallback]
+      @on_before = options.fetch(:on_before, [])
+      @on_after = options.fetch(:on_after, [])
 
     rescue KeyError => e
       raise ArgumentError.new("Missing required arguments: #{e.message}")
