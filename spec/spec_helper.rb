@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
-require 'protoboard'
 require 'simplecov'
-
 SimpleCov.start do
   add_filter '/spec/'
 end
+require 'protoboard'
+
 require_relative './helpers/circuit_breaker_helpers'
 require_relative './support/custom_matchers'
 require 'protoboard'

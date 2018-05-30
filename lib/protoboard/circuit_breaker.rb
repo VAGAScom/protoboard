@@ -28,9 +28,9 @@ module Protoboard
 
       def services_healthcheck
         circuits_hash = registered_circuits.map do |circuit|
-          # state = Protoboard.config.adapter.check_status(circuit.name)
+          state = Protoboard.config.adapter.check_state(circuit.name)
 
-          { name: circuit.name, status: 'OK', service: circuit.service }
+          { name: circuit.name, status: state, service: circuit.service }
         end
         services_hash = circuits_hash
           .group_by { |circuit| circuit[:service] }
