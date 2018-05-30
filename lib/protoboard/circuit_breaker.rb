@@ -25,6 +25,23 @@ module Protoboard
     end
 
     class << self
+
+      def services_healthcheck
+        circuits_hash = registered_circuits.map do |circuit|
+          # state = Protoboard.config.adapter.check_status(circuit.name)
+
+          { name: circuit.name, status: 'OK', service: circuit.service }
+        end
+        services_hash = circuits_hash
+          .group_by { |circuit| circuit[:service] }
+          .map do |service, circuits_hash|
+          circuits = circuits_hash.reduce({}) { |memo, circuit| memo[circuit[:name]] = circuit[:status]; memo }
+          { service => { 'circuits' => circuits } }
+        end.reduce(:merge)
+
+        { 'services' => services_hash }
+      end
+
       def registered_circuits
         circuits
       end
