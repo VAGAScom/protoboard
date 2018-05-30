@@ -1,7 +1,14 @@
 require "bundler/setup"
+require "simplecov"
+
+SimpleCov.start do
+  add_filter "/spec/"
+end
+
 require "protoboard"
 require_relative "./helpers/circuit_breaker_helpers"
 require_relative "./support/custom_matchers"
+
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
