@@ -58,6 +58,11 @@ module Protoboard
           raise circuit_execution.error if circuit_execution.fail?
         end
 
+        def check_state(circuit_name)
+          mapper = { 'yellow' => 'OK', 'green' => 'OK', 'red' => 'NOT_OK' }
+          mapper[Stoplight(circuit_name).color]
+        end
+
         private
 
         def prepare_data_store

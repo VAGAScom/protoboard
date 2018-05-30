@@ -2,7 +2,7 @@
 
 RSpec.describe Protoboard::Adapters::StoplightAdapter do
   describe '.run_circuit' do
-    subject(:run_circuit) { Protoboard.config.adapter.run_circuit(circuit) { some_object.some_method } }
+    subject(:run_circuit) { described_class.run_circuit(circuit) { some_object.some_method } }
 
     let(:circuit) do
       Protoboard::Circuit.new(
@@ -213,6 +213,47 @@ RSpec.describe Protoboard::Adapters::StoplightAdapter do
 
           expect(some_action).to have_received(:call).with(:fail, 'after global').once
         end
+      end
+    end
+  end
+
+  describe '.check_state' do
+    subject { described_class.check_state(circuit.name) }
+
+    context 'with a green circuit' do
+      let(:circuit) do
+        Protoboard::Circuit.new(
+          name: 'my_cool_service#some_method',
+          service: 'my_cool_service',
+          method_name: 'some_method',
+          timeout: 1,
+          open_after: 2,
+          cool_off_after: 3
+        )
+      end
+      it 'returns OK' do
+        is_expected.to eq('OK')
+      end
+    end
+
+    context 'with a red circuit' do
+      let(:circuit) do
+        Protoboard::Circuit.new(
+          name: 'my_failure_service#some_method',
+          service: 'my_cool_service',
+          method_name: 'some_method',
+          timeout: 1,
+          open_after: 2,
+          cool_off_after: 60
+        )
+      end
+
+      before do
+        described_class.send(:prepare_data_store).set_state(Stoplight(circuit.name), Stoplight::State::LOCKED_RED)
+      end
+
+      it 'returns NOT_OK' do
+        is_expected.to eq('NOT_OK')
       end
     end
   end
