@@ -293,15 +293,15 @@ RSpec.describe Protoboard::CircuitBreaker do
           end
         end
 
-        is_expected.to eq({
-                           'services' => {
-                             'my_service_name' => {
-                               'circuits' => {
-                                 'my_service_name#some_method' => 'OK'
-                               }
-                             }
-                           }
-                         })
+        is_expected.to eq(
+          'services' => {
+            'my_service_name' => {
+              'circuits' => {
+                'my_service_name#some_method' => 'OK'
+              }
+            }
+          }
+        )
       end
     end
 
@@ -310,7 +310,7 @@ RSpec.describe Protoboard::CircuitBreaker do
         class Foo4
           include Protoboard::CircuitBreaker
 
-          register_circuits( {some_method: 'my_custom_name', other_method: 'my_other_custom_name'},
+          register_circuits({ some_method: 'my_custom_name', other_method: 'my_other_custom_name' },
                             options: {
                               service: 'my_service_name',
                               timeout: 1,
@@ -322,16 +322,16 @@ RSpec.describe Protoboard::CircuitBreaker do
           end
         end
 
-        is_expected.to eq({
-                            'services' => {
-                              'my_service_name' => {
-                                'circuits' => {
-                                  'my_custom_name' => 'OK',
-                                  'my_other_custom_name' => 'OK'
-                                }
-                              }
-                            }
-                          })
+        is_expected.to eq(
+          'services' => {
+            'my_service_name' => {
+              'circuits' => {
+                'my_custom_name' => 'OK',
+                'my_other_custom_name' => 'OK'
+              }
+            }
+          }
+        )
       end
     end
   end
