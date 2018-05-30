@@ -3,8 +3,18 @@
 module Protoboard
   module CircuitBreaker
     module ClassMethods
-      def register_circuits(circuit_methods, options:, fallback: nil)
-        circuits = Protoboard::CircuitBreaker.create_circuits(circuit_methods, options.merge(fallback: fallback))
+      def register_circuits(circuit_methods, on_before: [], on_after: [], options:, fallback: nil)
+        Protoboard::Helpers::VALIDATE_CALLBACKS.call(on_before)
+        Protoboard::Helpers::VALIDATE_CALLBACKS.call(on_after)
+
+        circuits = Protoboard::CircuitBreaker.create_circuits(
+          circuit_methods,
+          options.merge(
+            fallback: fallback,
+            on_before: on_before,
+            on_after: on_after
+          )
+        )
         circuits.each do |circuit|
           Protoboard::CircuitBreaker.add_circuit circuit
         end

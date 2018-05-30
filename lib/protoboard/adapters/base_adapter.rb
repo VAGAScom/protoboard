@@ -17,7 +17,7 @@ module Protoboard
         private
 
         def before_global_callback(circuit_execution)
-          Protoboard.config.callbacks.before do |callback|
+          Protoboard.config.callbacks.before.each do |callback|
             callback.call(circuit_execution)
           end
         end
@@ -29,7 +29,7 @@ module Protoboard
         end
 
         def after_global_callback(circuit_execution)
-          Protoboard.config.callbacks.afterA do |callback|
+          Protoboard.config.callbacks.after.each do |callback|
             callback.call(circuit_execution)
           end
         end

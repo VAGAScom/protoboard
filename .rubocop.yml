@@ -20,3 +20,7 @@ Metrics/BlockLength:
 
 Metrics/MethodLength:
   Max: 15
+
+Naming/UncommunicativeMethodParamName:
+  Exclude:
+    - spec/**/*

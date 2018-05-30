@@ -3,7 +3,7 @@
 require 'stoplight'
 module Protoboard
   module Adapters
-    class StoplightAdapter
+    class StoplightAdapter < BaseAdapter
       class Configuration
         extend Dry::Configurable
 
@@ -36,16 +36,26 @@ module Protoboard
         def run_circuit(circuit, &block)
           prepare_data_store
 
-          # execute_before_circuit_callbacks
+          circuit_execution = Protoboard::CircuitExecution.new(circuit)
+
+          execute_before_circuit_callbacks(circuit_execution)
 
           stoplight = Stoplight(circuit.name, &block)
                       .with_threshold(circuit.open_after)
                       .with_cool_off_time(circuit.cool_off_after)
 
           stoplight.with_fallback(&circuit.fallback) if circuit.fallback
-          stoplight.run
+          value = stoplight.run
 
-          # execute_after_circuit_callbacks
+          circuit_execution = ::Protoboard::CircuitExecution.new(circuit, state: :success, value: value)
+          execute_after_circuit_callbacks(circuit_execution)
+
+          value
+        rescue StandardError =>  exception
+          circuit_execution = Protoboard::CircuitExecution.new(circuit, state: :fail, error: exception)
+          execute_after_circuit_callbacks(circuit_execution)
+
+          raise circuit_execution.error if circuit_execution.fail?
         end
 
         private
