@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Protoboard
   class CircuitExecution
-    STATES = [:pending, :success, :fail]
+    STATES = %i[not_started success fail].freeze
 
     attr_reader :circuit, :state, :value, :error
 

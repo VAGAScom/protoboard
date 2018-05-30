@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Protoboard
   module Helpers
     VALIDATE_CALLBACKS = lambda do |callbacks|

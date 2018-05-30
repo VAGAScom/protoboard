@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'dry-configurable'
 require 'protoboard/circuit_execution'
 require 'protoboard/adapters/base_adapter'

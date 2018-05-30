@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 RSpec.describe Protoboard do
-  it "has a version number" do
+  it 'has a version number' do
     expect(Protoboard::VERSION).not_to be nil
   end
 
@@ -34,15 +36,14 @@ RSpec.describe Protoboard do
     context 'when passing a list of callbacks' do
       let(:callable_object) do
         Class.new do
-          def call(_)
-          end
+          def call(_); end
         end.new
       end
       it 'configure the callbacks' do
         Protoboard.configure do |config|
           config.callbacks.tap do |callback|
-            callback.before = [callable_object, -> (_) {}]
-            callback.after = [callable_object, -> (_) {}]
+            callback.before = [callable_object, ->(_) {}]
+            callback.after = [callable_object, ->(_) {}]
           end
         end
 
@@ -55,27 +56,27 @@ RSpec.describe Protoboard do
 
     context 'with invalid before callback' do
       it 'raises a error' do
-        expect{
+        expect do
           Protoboard.configure do |config|
             config.callbacks.tap do |callback|
               callback.before = [-> {}]
-              callback.after = [-> (_) {}]
+              callback.after = [->(_) {}]
             end
           end
-        }.to raise_error(Protoboard::Errors::InvalidCallback)
+        end.to raise_error(Protoboard::Errors::InvalidCallback)
       end
     end
 
     context 'with invalid after callback' do
       it 'raises a error' do
-        expect{
+        expect do
           Protoboard.configure do |config|
             config.callbacks.tap do |callback|
-              callback.before = [-> (_) {}]
-              callback.after = [-> () {}]
+              callback.before = [->(_) {}]
+              callback.after = [-> {}]
             end
           end
-        }.to raise_error(Protoboard::Errors::InvalidCallback)
+        end.to raise_error(Protoboard::Errors::InvalidCallback)
       end
     end
   end

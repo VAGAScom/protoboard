@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rspec/expectations'
 
 RSpec::Matchers.define :be_a_circuit_with do |options|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Protoboard
   class Configuration
     extend Dry::Configurable
@@ -13,4 +15,3 @@ module Protoboard
     end
   end
 end
-

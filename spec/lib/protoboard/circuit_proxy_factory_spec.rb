@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Protoboard::CircuitProxyFactory do
   describe '.create_module' do
     let(:circuit1) do
@@ -55,8 +57,7 @@ RSpec.describe Protoboard::CircuitProxyFactory do
 
       class FooBar
         prepend Protoboard::FooBarCircuitProxy
-        def some_method
-        end
+        def some_method; end
       end
 
       FooBar.new.some_method
