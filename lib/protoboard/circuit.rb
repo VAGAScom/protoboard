@@ -18,8 +18,8 @@ module Protoboard
       @fallback = options[:fallback]
       @on_before = options.fetch(:on_before, [])
       @on_after = options.fetch(:on_after, [])
-    rescue KeyError => e
-      raise ArgumentError, "Missing required arguments: #{e.message}"
+    rescue KeyError => error
+      raise ArgumentError, "Missing required arguments: #{error.message}"
     end
   end
 end

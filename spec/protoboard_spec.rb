@@ -41,10 +41,8 @@ RSpec.describe Protoboard do
       end
       it 'configure the callbacks' do
         Protoboard.configure do |config|
-          config.callbacks.tap do |callback|
-            callback.before = [callable_object, ->(_) {}]
-            callback.after = [callable_object, ->(_) {}]
-          end
+            config.callbacks.before = [callable_object, ->(_) {}]
+            config.callbacks.after = [callable_object, ->(_) {}]
         end
 
         expect(Protoboard.config.callbacks.before.size).to eq(2)

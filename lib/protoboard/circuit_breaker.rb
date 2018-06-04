@@ -15,6 +15,7 @@ module Protoboard
             on_after: on_after
           )
         )
+
         circuits.each do |circuit|
           Protoboard::CircuitBreaker.add_circuit circuit
         end
