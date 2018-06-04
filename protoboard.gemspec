@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'protoboard'
   spec.version       = Protoboard::VERSION
   spec.authors       = ['Carlos Atkinson', 'Kelly Bhering']
-  spec.email         = ['carlos.atkinson@vagas.com.br', 'kelly.bhering@vagas.com.br']
+  spec.email         = ['carlos.atks@gmail.com', 'kellybhering@hotmail.com']
 
   spec.summary       = 'Protoboard abstracts the way you use Circuit Breaker' \
                        'allowing you to easily use it with any Ruby Object'
