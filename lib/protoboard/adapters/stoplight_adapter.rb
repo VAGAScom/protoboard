@@ -59,7 +59,7 @@ module Protoboard
         end
 
         def check_state(circuit_name)
-          mapper = { 'yellow' => 'OK', 'green' => 'OK', 'red' => 'NOT_OK' }
+          mapper = { 'yellow' => 'NOT_OK', 'green' => 'OK', 'red' => 'NOT_OK' }
           mapper[Stoplight(circuit_name).color]
         end
 
