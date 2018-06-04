@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Protoboard
+  ##
+  # This class represents a circuit execution.
   class CircuitExecution
     STATES = %i[not_started success fail].freeze
 
