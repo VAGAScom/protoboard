@@ -2,9 +2,11 @@
 
 module Protoboard
   module CircuitProxyFactory
+    using Protoboard::Refinements::StringRefinements
+
     class << self
       def create_module(circuits, class_name)
-        module_name = infer_module_name(class_name)
+        module_name = infer_module_name(class_name, circuits.map(&:method_name))
         proxy_module = Module.new
 
         proxy_module.instance_exec do
@@ -20,8 +22,8 @@ module Protoboard
 
       private
 
-      def infer_module_name(class_name)
-        "#{class_name.split('::').join('')}CircuitProxy"
+      def infer_module_name(class_name, methods)
+        "#{methods.map(&:to_s).map(&:camelize).join}#{class_name.split('::').join('')}CircuitProxy"
       end
     end
   end

@@ -34,7 +34,7 @@ RSpec.describe Protoboard::CircuitProxyFactory do
 
     context 'with a name containing no namespace' do
       it 'returns a module proxying the methods' do
-        is_expected.to eq(Protoboard::FooBarCircuitProxy)
+        is_expected.to eq(Protoboard::SomeMethodSomeMethod2FooBarCircuitProxy)
 
         expect(subject.instance_methods).to include(:some_method, :some_method2)
       end
@@ -44,7 +44,7 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       let(:class_name) { 'Foo::Bar' }
 
       it 'returns a module proxying the methods' do
-        is_expected.to eq(Protoboard::FooBarCircuitProxy)
+        is_expected.to eq(Protoboard::SomeMethodSomeMethod2FooBarCircuitProxy)
 
         expect(subject.instance_methods).to include(:some_method, :some_method2)
       end
@@ -56,7 +56,7 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       create_module
 
       class FooBar
-        prepend Protoboard::FooBarCircuitProxy
+        prepend Protoboard::SomeMethodSomeMethod2FooBarCircuitProxy
         def some_method; end
       end
 

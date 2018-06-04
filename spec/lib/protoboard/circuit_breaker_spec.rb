@@ -224,7 +224,7 @@ RSpec.describe Protoboard::CircuitBreaker do
         end
       end
 
-      expect(FooService.ancestors.first).to eq(Protoboard::FooServiceCircuitProxy)
+      expect(FooService.ancestors.first).to eq(Protoboard::SomeMethodFooServiceCircuitProxy)
     end
 
     context 'with fallback' do
