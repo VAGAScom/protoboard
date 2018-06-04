@@ -25,6 +25,10 @@ module Protoboard
     end
 
     class << self
+      def services_healthcheck
+        Protoboard::Helpers::ServicesHealthcheckGenerator.new.call
+      end
+
       def registered_circuits
         circuits
       end

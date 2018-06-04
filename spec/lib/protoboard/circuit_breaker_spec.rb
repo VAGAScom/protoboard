@@ -272,4 +272,67 @@ RSpec.describe Protoboard::CircuitBreaker do
       end
     end
   end
+
+  describe '.services_healthcheck' do
+    subject { described_class.services_healthcheck }
+
+    context 'with one circuit registered' do
+      it 'returns a hash with all services and circuit states' do
+        class Foo3
+          include Protoboard::CircuitBreaker
+
+          register_circuits [:some_method],
+                            options: {
+                              service: 'my_service_name',
+                              timeout: 1,
+                              open_after: 2,
+                              cool_off_after: 3
+                            }
+          def some_method
+            'OK'
+          end
+        end
+
+        is_expected.to eq(
+          'services' => {
+            'my_service_name' => {
+              'circuits' => {
+                'my_service_name#some_method' => 'OK'
+              }
+            }
+          }
+        )
+      end
+    end
+
+    context 'with registered circuits with custom names' do
+      it 'returns a hash with all services and circuit states' do
+        class Foo4
+          include Protoboard::CircuitBreaker
+
+          register_circuits({ some_method: 'my_custom_name', other_method: 'my_other_custom_name' },
+                            options: {
+                              service: 'my_service_name',
+                              timeout: 1,
+                              open_after: 2,
+                              cool_off_after: 3
+                            })
+          def some_method
+            'OK'
+          end
+        end
+
+        is_expected.to eq(
+          'services' => {
+            'my_service_name' => {
+              'circuits' => {
+                'my_custom_name' => 'OK',
+                'my_other_custom_name' => 'OK'
+              }
+            }
+          }
+        )
+      end
+    end
+  end
 end
