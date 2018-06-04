@@ -92,9 +92,7 @@ P.S: In before calbacks the state will always be `:not_started` and in after cal
 
 ### Check Services and Circuits Status
 
-If you want to check the services and circuits registered in Protoboard you can use `Protoboard::CircuitBreaker.services_healthcheck`
-
-it will return a hash with the status of all circuits:
+If you want to check the services and circuits registered in Protoboard you can use `Protoboard::CircuitBreaker.services_healthcheck`, it will return a hash with the status of all circuits:
 
 ```ruby
 {
