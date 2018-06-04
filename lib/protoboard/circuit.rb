@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Protoboard
+  ##
+  # This class represents a circuit.
   class Circuit
     attr_reader :name, :service,
                 :method_name, :timeout,

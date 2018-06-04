@@ -3,7 +3,11 @@
 require 'stoplight'
 module Protoboard
   module Adapters
+    ##
+    # This class manages every aspect for the execution of a circuit using the gem stoplight
     class StoplightAdapter < BaseAdapter
+      ##
+      # This class represents the configuration needed to configure the gem stoplight.
       class Configuration
         extend Dry::Configurable
 
@@ -17,22 +21,32 @@ module Protoboard
       end
 
       class << self
+        ##
+        # This methods is used to make it easier to access adapter configurations
         def configure(&block)
           Configuration.configure(&block)
         end
 
+        ##
+        # This method is used to make it easier to access adapter data store configuration
         def data_store
           Configuration.config.data_store
         end
 
+        ##
+        # This method is used to make it easier to access adapter redis host configuration
         def redis_host
           Configuration.config.redis_host
         end
 
+        ##
+        # This method is used to make it easier to access adapter redis port configuration
         def redis_port
           Configuration.config.redis_port
         end
 
+        ##
+        # Runs the circuit using stoplight
         def run_circuit(circuit, &block)
           prepare_data_store
 
@@ -58,6 +72,12 @@ module Protoboard
           raise circuit_execution.error if circuit_execution.fail?
         end
 
+        # Returns the state of a circuit
+        #
+        # ==== States returned
+        #
+        # * +OK+ - when that stoplight circuit is green
+        # * +NOT_OK+ - when that stoplight circuit is yellow or red
         def check_state(circuit_name)
           mapper = { 'yellow' => 'NOT_OK', 'green' => 'OK', 'red' => 'NOT_OK' }
           mapper[Stoplight(circuit_name).color]

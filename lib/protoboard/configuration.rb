@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Protoboard
+  ##
+  # This class represents the configuration needed to run the gem.
   class Configuration
     extend Dry::Configurable
 
