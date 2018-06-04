@@ -4,9 +4,8 @@ module Protoboard
   ##
   # This module is responsible to manage a proxy module that executes the circuit.
   module CircuitProxyFactory
-    using Protoboard::Refinements::StringRefinements
-
     class << self
+      using Protoboard::Refinements::StringRefinements
       ##
       # Creates the module that executes the circuit
       def create_module(circuits, class_name)
