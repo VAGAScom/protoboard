@@ -36,9 +36,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-configurable', '~> 0.7.0'
   spec.add_dependency 'stoplight', '~> 2.1.3'
   spec.add_development_dependency 'bundler', '~> 1.16'
-  spec.add_development_dependency 'byebug'
   spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'redis', '~> 4.0.1'
+  spec.add_development_dependency 'redis', '~> 3.2'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'simplecov'
 end
