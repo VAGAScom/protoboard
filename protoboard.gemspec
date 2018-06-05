@@ -11,9 +11,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Carlos Atkinson', 'Kelly Bhering']
   spec.email         = ['carlos.atks@gmail.com', 'kellybhering@hotmail.com']
 
-  spec.summary       = 'Protoboard abstracts the way you use Circuit Breaker' \
-                       ' allowing you to easily use it with any Ruby Object'
-  gem.homepage = 'https://github.com/VAGAScom/protoboard'
+  spec.summary       = 'Protoboard abstracts the way you use Circuit Breaker allowing you to easily use it with any Ruby Object'
+  spec.homepage = 'https://github.com/VAGAScom/protoboard'
 
   # spec.description   = %q{TODO: Write a longer description or delete this line.}
   spec.license       = 'MIT'
