@@ -12,9 +12,10 @@ Gem::Specification.new do |spec|
   spec.email         = ['carlos.atks@gmail.com', 'kellybhering@hotmail.com']
 
   spec.summary       = 'Protoboard abstracts the way you use Circuit Breaker' \
-                       'allowing you to easily use it with any Ruby Object'
+                       ' allowing you to easily use it with any Ruby Object'
+  gem.homepage = 'https://github.com/VAGAScom/protoboard'
+
   # spec.description   = %q{TODO: Write a longer description or delete this line.}
-  # spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
