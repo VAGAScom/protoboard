@@ -119,6 +119,7 @@ In configuration you can customize the adapter options and set callbacks and con
 
 Protoboard.configure do |config|
   config.adapter = Protoboard::Adapters::StoplightAdapter
+  config.namespace = 'Foo'
 
   config.adapter.configure do |adapter|
     adapter.data_store = :redis # Default is :memory 
@@ -136,6 +137,7 @@ end
 The available options are:
 
 * `adapter =` Sets the adapter, `Protoboard::Adapters::StoplightAdapter` is the default
+* `namespace =` It's used to name the circuit avoiding naming colision with other projects
 * `callbacks.before =` Receives an array of callables, lambdas, procs or any object that responds to `call` and receives one argument. It will be called before each circuit execution.
 * `callbacks.after =` Receives an array of callables, lambdas, procs or any object that responds to `call` and receives one argument. It will be called after each circuit execution.
 
