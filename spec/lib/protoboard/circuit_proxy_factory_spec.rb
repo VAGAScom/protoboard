@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Protoboard::CircuitProxyFactory do
+  before { disable_constant_warnings }
+
   describe '.create_module' do
     let(:circuit1) do
       Protoboard::Circuit.new(

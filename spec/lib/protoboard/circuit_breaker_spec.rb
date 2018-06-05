@@ -2,7 +2,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Protoboard::CircuitBreaker do
-  before { clean_circuits }
+  before do
+    clean_circuits
+    disable_constant_warnings
+  end
 
   describe '.register_circuits' do
     context 'when included' do

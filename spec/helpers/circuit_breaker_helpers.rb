@@ -6,4 +6,8 @@ module CircuitBreakerHelpers
       @circuits = []
     end
   end
+
+  def disable_constant_warnings
+    $VERBOSE = nil
+  end
 end
