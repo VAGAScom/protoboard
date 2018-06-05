@@ -7,7 +7,7 @@ require 'protoboard/adapters/stoplight_adapter'
 
 require 'protoboard/version'
 require 'protoboard/helpers/validate_callbacks'
-require 'protoboard/refinements/string_refinements'
+require 'protoboard/refinements/string_extensions'
 require 'protoboard/helpers/services_healthcheck_generator'
 require 'protoboard/configuration'
 require 'protoboard/circuit_breaker'
