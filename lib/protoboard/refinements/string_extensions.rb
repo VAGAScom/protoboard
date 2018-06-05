@@ -1,6 +1,6 @@
 module Protoboard
   module Refinements
-    module StringRefinements
+    module StringExtensions
       refine String do
         def camelize
           string = sub(/^[a-z\d]*/) { $&.capitalize }

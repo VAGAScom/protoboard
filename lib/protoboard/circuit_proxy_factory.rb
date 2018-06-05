@@ -5,7 +5,7 @@ module Protoboard
   # This module is responsible to manage a proxy module that executes the circuit.
   module CircuitProxyFactory
     class << self
-      using Protoboard::Refinements::StringRefinements
+      using Protoboard::Refinements::StringExtensions
       ##
       # Creates the module that executes the circuit
       def create_module(circuits, class_name)
@@ -28,7 +28,7 @@ module Protoboard
       ##
       # Formats the module name
       def infer_module_name(class_name, methods)
-        "#{methods.map(&:to_s).map(&:camelize).join}#{class_name.split('::').join('')}CircuitProxy"
+        "#{methods.map(&:to_s).map { |method| method.camelize }.join}#{class_name.split('::').join('')}CircuitProxy"
       end
     end
   end
