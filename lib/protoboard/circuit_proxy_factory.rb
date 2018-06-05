@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-
 module Protoboard
   ##
   # This module is responsible to manage a proxy module that executes the circuit.
   module CircuitProxyFactory
     class << self
+      using Protoboard::Refinements::StringRefinements
       ##
       # Creates the module that executes the circuit
       def create_module(circuits, class_name)
@@ -28,15 +28,7 @@ module Protoboard
       ##
       # Formats the module name
       def infer_module_name(class_name, methods)
-        "#{methods.map(&:to_s).map(&self.method(:camelize)).join}#{class_name.split('::').join('')}CircuitProxy"
-      end
-
-      ##
-      # Camelizes a string
-      def camelize(string)
-        string.sub(/^[a-z\d]*/) { $&.capitalize }
-              .gsub(/(?:_|(\/))([a-z\d]*)/) { "#{$1}#{$2.capitalize}" }
-              .gsub('/', '::')
+        "#{methods.map(&:to_s).map(&:camelize).join}#{class_name.split('::').join('')}CircuitProxy"
       end
     end
   end
