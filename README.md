@@ -30,11 +30,12 @@ class MyFooService
   include Protoboard::CircuitBreaker
 
   register_circuits [:some_method],
-  options: {
-   service: 'my_cool_service',
-   open_after: 2,
-   cool_off_after: 3
-  }
+    options: {
+      service: 'my_cool_service',
+      open_after: 2,
+      cool_off_after: 3
+    }
+
   def some_method
     # Something that can break
   end
@@ -48,14 +49,14 @@ class MyFooService
   include Protoboard::CircuitBreaker
 
   register_circuits [:some_method],
-  fallback: -> (error) { 'Do Something' }
-  on_before: [->(ce) { Something.notify("Circuit #{ce.circuit.name}") }, ->(_) {}],
-  on_after: [->(ce) { Something.notify("It fails with #{ce.error}") if ce.fail? }],
-  options: {
-   service: 'my_cool_service',
-   open_after: 2,
-   cool_off_after: 3
-  }
+    fallback: -> (error) { 'Do Something' }
+    on_before: [->(ce) { Something.notify("Circuit #{ce.circuit.name}") }, ->(_) {}],
+    on_after: [->(ce) { Something.notify("It fails with #{ce.error}") if ce.fail? }],
+    options: {
+      service: 'my_cool_service',
+      open_after: 2,
+      cool_off_after: 3
+    }
   def some_method
     # Something that can break
   end
