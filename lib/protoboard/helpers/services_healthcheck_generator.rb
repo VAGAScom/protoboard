@@ -33,7 +33,7 @@ module Protoboard
           { service => { 'circuits' => circuits } }
         end.reduce(:merge)
 
-        { 'services' => services_hash }
+        { 'services' => services_hash.to_h }
       end
     end
   end

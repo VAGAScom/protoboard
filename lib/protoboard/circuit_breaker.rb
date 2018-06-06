@@ -17,7 +17,7 @@ module Protoboard
       # * +options+ - A hash containing the options needed for the circuit to execute
       # *   +:service+ - A string representing the name of the service for the circuit
       # *   +:open_after+ - An integer representing the number of errors to occur for the circuit to be opened
-      # *   +:cool_off_after+ - An integer representing the number of successful requests to occur for the circuit to be closed
+      # *   +:cool_off_after+ - An integer representing the time in seconds for the circuit to attempt to recover
       #
       #   ==== Example
       #   options: {
