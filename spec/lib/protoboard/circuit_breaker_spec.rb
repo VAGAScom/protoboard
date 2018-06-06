@@ -279,6 +279,12 @@ RSpec.describe Protoboard::CircuitBreaker do
   describe '.services_healthcheck' do
     subject { described_class.services_healthcheck }
 
+    context 'with no circuit registered' do
+      it 'returns a hash with all services and circuit states' do
+        is_expected.to eq({ 'services' => {} })
+      end
+    end
+
     context 'with one circuit registered' do
       it 'returns a hash with all services and circuit states' do
         class Foo3
