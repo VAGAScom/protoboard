@@ -102,13 +102,12 @@ If you want to check the services and circuits registered in Protoboard you can 
   'services' => {
     'my_service_name' => {
       'circuits' => {
-        'my_circuit1' => 'OK',
-        'my_circuit2' => 'NOT_OK'
+        'some_namespace/my_service_name/SomeClass#some_method' => 'OK',
+        'my_custom_name' => 'NOT_OK'
       }
-     }
-   }
+    }
+  }
 }
-
 ```
 
 
