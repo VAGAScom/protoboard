@@ -34,6 +34,7 @@ module Protoboard
 
         circuits = Protoboard::CircuitBreaker.create_circuits(
           circuit_methods,
+          name,
           options.merge(
             fallback: fallback,
             on_before: on_before,
@@ -83,11 +84,11 @@ module Protoboard
 
       ##
       # Creates a new +circuit+.
-      def create_circuits(circuit_methods, options)
+      def create_circuits(circuit_methods,class_name, options)
         circuit_hash = case circuit_methods
                        when Array
                          circuit_methods.reduce({}) do |memo, value|
-                           memo.merge(value.to_sym => "#{formatted_namespace}#{options[:service]}\##{value}")
+                           memo.merge(value.to_sym => "#{formatted_namespace}#{options[:service]}/#{class_name}\##{value}")
                          end
                        when Hash
                          circuit_methods

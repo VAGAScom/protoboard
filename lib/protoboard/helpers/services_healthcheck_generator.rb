@@ -10,14 +10,16 @@ module Protoboard
       # Verifies the list of +circuits+ added and returns a hash with the +circuits names+ and its states.
       #
       #   ==== Examples
-      #   'services' => {
-      #    'my_service_name' => {
-      #       'circuits' => {
-      #         'my_service_name#some_method' => 'OK',
-      #         'my_custom_name' => 'NOT_OK'
-      #       }
-      #     }
-      #   }
+      #  {
+      #    'services' => {
+      #      'my_service_name' => {
+      #        'circuits' => {
+      #          'some_namespace/my_service_name/SomeClass#some_method' => 'OK',
+      #          'my_custom_name' => 'NOT_OK'
+      #        }
+      #      }
+      #    }
+      #  }
       #  ====
       #
       def call

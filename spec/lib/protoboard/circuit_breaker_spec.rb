@@ -41,7 +41,7 @@ RSpec.describe Protoboard::CircuitBreaker do
 
         circuit = Protoboard::CircuitBreaker.registered_circuits.first
         expect(circuit).to be_a_circuit_with(
-          name: 'my_cool_service#some_method',
+          name: 'my_cool_service/Foo1#some_method',
           service: 'my_cool_service',
           method_name: :some_method,
           timeout: 1,
@@ -60,7 +60,7 @@ RSpec.describe Protoboard::CircuitBreaker do
 
           circuit = Protoboard::CircuitBreaker.registered_circuits.first
           expect(circuit).to be_a_circuit_with(
-            name: "#{namespace}/my_cool_service#some_method",
+            name: "#{namespace}/my_cool_service/Foo1#some_method",
             service: 'my_cool_service',
             method_name: :some_method,
             timeout: 1,
@@ -191,7 +191,7 @@ RSpec.describe Protoboard::CircuitBreaker do
 
         circuit = Protoboard::CircuitBreaker.registered_circuits.first
         expect(circuit).to be_a_circuit_with(
-          name: 'my_cool_service#some_method1',
+          name: 'my_cool_service/Foo2#some_method1',
           service: 'my_cool_service',
           method_name: :some_method1,
           timeout: 1,
@@ -201,7 +201,7 @@ RSpec.describe Protoboard::CircuitBreaker do
 
         circuit = Protoboard::CircuitBreaker.registered_circuits.last
         expect(circuit).to be_a_circuit_with(
-          name: 'my_cool_service#some_method2',
+          name: 'my_cool_service/Foo2#some_method2',
           service: 'my_cool_service',
           method_name: :some_method2,
           timeout: 1,
@@ -306,7 +306,7 @@ RSpec.describe Protoboard::CircuitBreaker do
           'services' => {
             'my_service_name' => {
               'circuits' => {
-                'my_service_name#some_method' => 'OK'
+                'my_service_name/Foo3#some_method' => 'OK'
               }
             }
           }
