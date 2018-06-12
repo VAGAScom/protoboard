@@ -22,7 +22,7 @@ module Protoboard
       #  }
       #  ====
       #
-      def call(with_namespace: true)
+      def call(with_namespace:)
         circuits_hash = Protoboard::CircuitBreaker.registered_circuits.map do |circuit|
           state = Protoboard.config.adapter.check_state(circuit.name)
 
