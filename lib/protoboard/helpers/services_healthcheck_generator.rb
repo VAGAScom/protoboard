@@ -22,7 +22,7 @@ module Protoboard
       #  }
       #  ====
       #
-      def call
+      def call(with_namespace:)
         circuits_hash = Protoboard::CircuitBreaker.registered_circuits.map do |circuit|
           state = Protoboard.config.adapter.check_state(circuit.name)
 
@@ -31,11 +31,23 @@ module Protoboard
         services_hash = circuits_hash
                         .group_by { |circuit| circuit[:service] }
                         .map do |service, circuits_hash|
-          circuits = circuits_hash.each_with_object({}) { |circuit, memo| memo[circuit[:name]] = circuit[:status] }
+
+          circuits = circuits_hash.each_with_object({}) do |circuit, memo|
+            circuit_name = format_circuit_name(circuit[:name], with_namespace: with_namespace)
+            memo[circuit_name] = circuit[:status]
+          end
           { service => { 'circuits' => circuits } }
         end.reduce(:merge)
 
         { 'services' => services_hash.to_h }
+      end
+
+      private
+
+      def format_circuit_name(circuit_name, with_namespace:)
+        return circuit_name if with_namespace
+
+        circuit_name.sub("#{Protoboard.config.namespace}/", '')
       end
     end
   end

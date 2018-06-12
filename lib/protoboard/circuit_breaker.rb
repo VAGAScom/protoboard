@@ -54,8 +54,8 @@ module Protoboard
     class << self
       ##
       # Returns a hash with the +circuits+ names and its states.
-      def services_healthcheck
-        Protoboard::Helpers::ServicesHealthcheckGenerator.new.call
+      def services_healthcheck(with_namespace: true)
+        Protoboard::Helpers::ServicesHealthcheckGenerator.new.call(with_namespace: with_namespace)
       end
 
       ##
