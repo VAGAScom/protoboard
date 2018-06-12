@@ -277,7 +277,8 @@ RSpec.describe Protoboard::CircuitBreaker do
   end
 
   describe '.services_healthcheck' do
-    subject { described_class.services_healthcheck }
+    subject { described_class.services_healthcheck(options) }
+    let(:options) { {} }
 
     context 'with no circuit registered' do
       it 'returns a hash with all services and circuit states' do
@@ -349,6 +350,7 @@ RSpec.describe Protoboard::CircuitBreaker do
             config.namespace = 'Bazz'
           end
         end
+
         it 'returns a hash with all services and circuit states' do
           class Foo4
             include Protoboard::CircuitBreaker
@@ -375,6 +377,38 @@ RSpec.describe Protoboard::CircuitBreaker do
                              }
                            }
                          )
+        end
+
+        context 'with option with_namespace to false' do
+          let(:options) { { with_namespace: false} }
+
+          it 'returns a hash with all services and circuit states' do
+            class Foo5
+              include Protoboard::CircuitBreaker
+
+              register_circuits({ some_method: 'my_custom_name', other_method: 'my_other_custom_name' },
+                                options: {
+                                  service: 'my_service_name',
+                                  timeout: 1,
+                                  open_after: 2,
+                                  cool_off_after: 3
+                                })
+              def some_method
+                'OK'
+              end
+            end
+
+            is_expected.to eq(
+                             'services' => {
+                               'my_service_name' => {
+                                 'circuits' => {
+                                   'my_custom_name' => 'OK',
+                                   'my_other_custom_name' => 'OK'
+                                 }
+                               }
+                             }
+                           )
+          end
         end
       end
     end
