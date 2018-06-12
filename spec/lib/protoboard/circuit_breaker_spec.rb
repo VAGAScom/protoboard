@@ -342,6 +342,41 @@ RSpec.describe Protoboard::CircuitBreaker do
           }
         )
       end
+
+      context 'with a namespace' do
+        before do
+          Protoboard.configure do |config|
+            config.namespace = 'Bazz'
+          end
+        end
+        it 'returns a hash with all services and circuit states' do
+          class Foo4
+            include Protoboard::CircuitBreaker
+
+            register_circuits({ some_method: 'my_custom_name', other_method: 'my_other_custom_name' },
+                              options: {
+                                service: 'my_service_name',
+                                timeout: 1,
+                                open_after: 2,
+                                cool_off_after: 3
+                              })
+            def some_method
+              'OK'
+            end
+          end
+
+          is_expected.to eq(
+                           'services' => {
+                             'my_service_name' => {
+                               'circuits' => {
+                                 'Bazz/my_custom_name' => 'OK',
+                                 'Bazz/my_other_custom_name' => 'OK'
+                               }
+                             }
+                           }
+                         )
+        end
+      end
     end
   end
 end
