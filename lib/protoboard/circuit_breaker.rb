@@ -91,7 +91,7 @@ module Protoboard
                            memo.merge(value.to_sym => "#{formatted_namespace}#{options[:service]}/#{class_name}\##{value}")
                          end
                        when Hash
-                         circuit_methods
+                         circuit_methods.map { |key, value| [key, "#{formatted_namespace}#{value}"] }.to_h
                        else
                          raise ArgumentError, 'Invalid input for circuit methods'
                        end
