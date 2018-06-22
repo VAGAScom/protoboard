@@ -34,6 +34,7 @@ module Protoboard
 
         circuits = Protoboard::CircuitBreaker.create_circuits(
           circuit_methods,
+          name,
           options.merge(
             fallback: fallback,
             on_before: on_before,
@@ -57,8 +58,8 @@ module Protoboard
     class << self
       ##
       # Returns a hash with the +circuits+ names and its states.
-      def services_healthcheck
-        Protoboard::Helpers::ServicesHealthcheckGenerator.new.call
+      def services_healthcheck(with_namespace: true)
+        Protoboard::Helpers::ServicesHealthcheckGenerator.new.call(with_namespace: with_namespace)
       end
 
       ##
@@ -87,14 +88,14 @@ module Protoboard
 
       ##
       # Creates a new +circuit+.
-      def create_circuits(circuit_methods, options, singleton_methods)
+      def create_circuits(circuit_methods,class_name, options, singleton_methods)
         circuit_hash = case circuit_methods
                        when Array
                          circuit_methods.reduce({}) do |memo, value|
-                           memo.merge(value.to_sym => "#{formatted_namespace}#{options[:service]}\##{value}")
+                           memo.merge(value.to_sym => "#{formatted_namespace}#{options[:service]}/#{class_name}\##{value}")
                          end
                        when Hash
-                         circuit_methods
+                         circuit_methods.map { |key, value| [key, "#{formatted_namespace}#{value}"] }.to_h
                        else
                          raise ArgumentError, 'Invalid input for circuit methods'
                        end

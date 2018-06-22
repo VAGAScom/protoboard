@@ -41,7 +41,7 @@ RSpec.describe Protoboard::CircuitBreaker do
 
         circuit = Protoboard::CircuitBreaker.registered_circuits.first
         expect(circuit).to be_a_circuit_with(
-          name: 'my_cool_service#some_method',
+          name: 'my_cool_service/Foo1#some_method',
           service: 'my_cool_service',
           method_name: :some_method,
           timeout: 1,
@@ -78,7 +78,7 @@ RSpec.describe Protoboard::CircuitBreaker do
           circuit = Protoboard::CircuitBreaker.registered_circuits.first
 
           expect(circuit).to be_a_circuit_with(
-            name: 'my_cool_service#some_singleton_method',
+            name: 'my_cool_service/Foo1#some_singleton_method',
             service: 'my_cool_service',
             method_name: :some_singleton_method,
             timeout: 1,
@@ -100,7 +100,7 @@ RSpec.describe Protoboard::CircuitBreaker do
 
           circuit = Protoboard::CircuitBreaker.registered_circuits.first
           expect(circuit).to be_a_circuit_with(
-            name: "#{namespace}/my_cool_service#some_method",
+            name: "#{namespace}/my_cool_service/Foo1#some_method",
             service: 'my_cool_service',
             method_name: :some_method,
             timeout: 1,
@@ -269,7 +269,7 @@ RSpec.describe Protoboard::CircuitBreaker do
 
         circuit = Protoboard::CircuitBreaker.registered_circuits.first
         expect(circuit).to be_a_circuit_with(
-          name: 'my_cool_service#some_method1',
+          name: 'my_cool_service/Foo2#some_method1',
           service: 'my_cool_service',
           method_name: :some_method1,
           timeout: 1,
@@ -279,7 +279,7 @@ RSpec.describe Protoboard::CircuitBreaker do
 
         circuit = Protoboard::CircuitBreaker.registered_circuits.last
         expect(circuit).to be_a_circuit_with(
-          name: 'my_cool_service#some_method2',
+          name: 'my_cool_service/Foo2#some_method2',
           service: 'my_cool_service',
           method_name: :some_method2,
           timeout: 1,
@@ -379,7 +379,14 @@ RSpec.describe Protoboard::CircuitBreaker do
   end
 
   describe '.services_healthcheck' do
-    subject { described_class.services_healthcheck }
+    subject { described_class.services_healthcheck(options) }
+    let(:options) { {} }
+
+    context 'with no circuit registered' do
+      it 'returns a hash with all services and circuit states' do
+        is_expected.to eq({ 'services' => {} })
+      end
+    end
 
     context 'with one circuit registered' do
       it 'returns a hash with all services and circuit states' do
@@ -402,7 +409,7 @@ RSpec.describe Protoboard::CircuitBreaker do
           'services' => {
             'my_service_name' => {
               'circuits' => {
-                'my_service_name#some_method' => 'OK'
+                'my_service_name/Foo3#some_method' => 'OK'
               }
             }
           }
@@ -437,6 +444,74 @@ RSpec.describe Protoboard::CircuitBreaker do
             }
           }
         )
+      end
+
+      context 'with a namespace' do
+        before do
+          Protoboard.configure do |config|
+            config.namespace = 'Bazz'
+          end
+        end
+
+        it 'returns a hash with all services and circuit states' do
+          class Foo4
+            include Protoboard::CircuitBreaker
+
+            register_circuits({ some_method: 'my_custom_name', other_method: 'my_other_custom_name' },
+                              options: {
+                                service: 'my_service_name',
+                                timeout: 1,
+                                open_after: 2,
+                                cool_off_after: 3
+                              })
+            def some_method
+              'OK'
+            end
+          end
+
+          is_expected.to eq(
+                           'services' => {
+                             'my_service_name' => {
+                               'circuits' => {
+                                 'Bazz/my_custom_name' => 'OK',
+                                 'Bazz/my_other_custom_name' => 'OK'
+                               }
+                             }
+                           }
+                         )
+        end
+
+        context 'with option with_namespace to false' do
+          let(:options) { { with_namespace: false} }
+
+          it 'returns a hash with all services and circuit states' do
+            class Foo5
+              include Protoboard::CircuitBreaker
+
+              register_circuits({ some_method: 'my_custom_name', other_method: 'my_other_custom_name' },
+                                options: {
+                                  service: 'my_service_name',
+                                  timeout: 1,
+                                  open_after: 2,
+                                  cool_off_after: 3
+                                })
+              def some_method
+                'OK'
+              end
+            end
+
+            is_expected.to eq(
+                             'services' => {
+                               'my_service_name' => {
+                                 'circuits' => {
+                                   'my_custom_name' => 'OK',
+                                   'my_other_custom_name' => 'OK'
+                                 }
+                               }
+                             }
+                           )
+          end
+        end
       end
     end
   end
