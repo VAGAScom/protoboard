@@ -50,6 +50,46 @@ RSpec.describe Protoboard::CircuitBreaker do
         )
       end
 
+      context 'with a singleton method' do
+        let(:define_circuit_class) do
+          class Foo1
+            include Protoboard::CircuitBreaker
+
+            register_circuits [:some_singleton_method],
+                              singleton_methods: [:some_singleton_method],
+                              options: {
+                                service: 'my_cool_service',
+                                timeout: 1,
+                                open_after: 2,
+                                cool_off_after: 3
+                              }
+
+            def self.some_singleton_method
+              raise StandardError
+            end
+          end
+        end
+
+        it 'registers a circuit' do
+          define_circuit_class
+
+          expect(Protoboard::CircuitBreaker.registered_circuits.size).to eq(1)
+
+          circuit = Protoboard::CircuitBreaker.registered_circuits.first
+
+          expect(circuit).to be_a_circuit_with(
+            name: 'my_cool_service#some_singleton_method',
+            service: 'my_cool_service',
+            method_name: :some_singleton_method,
+            timeout: 1,
+            open_after: 2,
+            cool_off_after: 3
+          )
+
+          expect(circuit.singleton_method?).to eq(true)
+        end
+      end
+
       context 'with a namespace' do
         let(:namespace) { 'Foo' }
 
@@ -71,35 +111,73 @@ RSpec.describe Protoboard::CircuitBreaker do
       end
 
       context 'with a custom circuit name' do
-        let(:define_circuit_class) do
-          class Foo1
-            include Protoboard::CircuitBreaker
+        context 'with no singleton method' do
+          let(:define_circuit_class) do
+            class Foo1
+              include Protoboard::CircuitBreaker
 
-            register_circuits({ some_method: 'my_custom_circuit_name' },
-                              options: {
-                                service: 'my_cool_service',
-                                timeout: 1,
-                                open_after: 2,
-                                cool_off_after: 3
-                              })
-            def some_method
-              raise StandardError
+              register_circuits({ some_method: 'my_custom_circuit_name' },
+                                options: {
+                                  service: 'my_cool_service',
+                                  timeout: 1,
+                                  open_after: 2,
+                                  cool_off_after: 3
+                                })
+              def some_method
+                raise StandardError
+              end
             end
+          end
+
+          it 'registers a circuit' do
+            define_circuit_class
+
+            circuit = Protoboard::CircuitBreaker.registered_circuits.first
+            expect(circuit).to be_a_circuit_with(
+              name: 'my_custom_circuit_name',
+              service: 'my_cool_service',
+              method_name: :some_method,
+              timeout: 1,
+              open_after: 2,
+              cool_off_after: 3
+            )
           end
         end
 
-        it 'registers a circuit' do
-          define_circuit_class
+        context 'with singleton methods' do
+          let(:define_circuit_class) do
+            class Foo1
+              include Protoboard::CircuitBreaker
 
-          circuit = Protoboard::CircuitBreaker.registered_circuits.first
-          expect(circuit).to be_a_circuit_with(
-            name: 'my_custom_circuit_name',
-            service: 'my_cool_service',
-            method_name: :some_method,
-            timeout: 1,
-            open_after: 2,
-            cool_off_after: 3
-          )
+              register_circuits({ some_singleton_method: 'my_custom_circuit_name' },
+                                singleton_methods: [:some_singleton_method],
+                                options: {
+                                  service: 'my_cool_service',
+                                  timeout: 1,
+                                  open_after: 2,
+                                  cool_off_after: 3
+                                })
+              def self.some_singleton_method
+                raise StandardError
+              end
+            end
+          end
+
+          it 'registers a circuit' do
+            define_circuit_class
+
+            circuit = Protoboard::CircuitBreaker.registered_circuits.first
+            expect(circuit).to be_a_circuit_with(
+              name: 'my_custom_circuit_name',
+              service: 'my_cool_service',
+              method_name: :some_singleton_method,
+              timeout: 1,
+              open_after: 2,
+              cool_off_after: 3
+            )
+
+            expect(circuit.singleton_method?).to eq(true)
+          end
         end
       end
 
@@ -227,7 +305,31 @@ RSpec.describe Protoboard::CircuitBreaker do
         end
       end
 
-      expect(FooService.ancestors.first).to eq(Protoboard::SomeMethodFooServiceCircuitProxy)
+      expect(FooService.ancestors.first).to eq(Protoboard::SomeMethodFooServiceCircuitProxy::InstanceMethods)
+    end
+
+    context 'with singleton methods' do
+      it 'prepends a module to the singleton class' do
+        class FooService
+          include Protoboard::CircuitBreaker
+
+          register_circuits [:some_method, :some_singleton_method],
+                            singleton_methods: [:some_singleton_method],
+                            options: {
+                              service: 'my_cool_service',
+                              timeout: 1,
+                              open_after: 2,
+                              cool_off_after: 3
+                            }
+
+          def self.some_singleton_method
+            "It's ok"
+          end
+        end
+
+        expect(FooService.singleton_class.ancestors.first)
+          .to eq(Protoboard::SomeMethodSomeSingletonMethodFooServiceCircuitProxy::ClassMethods)
+      end
     end
 
     context 'with fallback' do
@@ -308,7 +410,7 @@ RSpec.describe Protoboard::CircuitBreaker do
       end
     end
 
-    context 'with registered circuits with custom names' do
+    context 'when registering circuits with custom names' do
       it 'returns a hash with all services and circuit states' do
         class Foo4
           include Protoboard::CircuitBreaker

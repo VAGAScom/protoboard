@@ -20,8 +20,13 @@ module Protoboard
       @fallback = options[:fallback]
       @on_before = options.fetch(:on_before, [])
       @on_after = options.fetch(:on_after, [])
+      @singleton_method = options.fetch(:singleton_method, false)
     rescue KeyError => error
       raise ArgumentError, "Missing required arguments: #{error.message}"
+    end
+
+    def singleton_method?
+      @singleton_method
     end
   end
 end

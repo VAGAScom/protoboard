@@ -66,7 +66,7 @@ end
 Also if you want to add more than one method in the same class and customize the circuit name:
 
 ```ruby
-class Foo4
+class MyFooService
   include Protoboard::CircuitBreaker
 
   register_circuits({ some_method: 'my_custom_name', other_method: 'my_other_custom_name' },
@@ -77,6 +77,30 @@ class Foo4
     })
   def some_method
     'OK'
+  end
+end
+```
+
+And you can add singleton methods to be wrapped by a circuit:
+
+```ruby
+class MyFooService
+  include Protoboard::CircuitBreaker
+
+  register_circuits [:some_method, :some_singleton_method],
+    singleton_methods: [:some_singleton_method],
+    options: {
+      service: 'my_cool_service',
+      open_after: 2,
+      cool_off_after: 3
+    }
+
+  def self.some_singleton_method
+    # Something that can break
+  end
+
+  def some_method
+    # Something that can break
   end
 end
 ```

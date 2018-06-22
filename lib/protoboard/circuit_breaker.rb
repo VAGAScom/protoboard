@@ -17,7 +17,7 @@ module Protoboard
       # * +options+ - A hash containing the options needed for the circuit to execute
       # *   +:service+ - A string representing the name of the service for the circuit
       # *   +:open_after+ - An integer representing the number of errors to occur for the circuit to be opened
-      # *   +:cool_off_after+ - An integer representing the number of successful requests to occur for the circuit to be closed
+      # *   +:cool_off_after+ - An integer representing the time in seconds for the circuit to attempt to recover
       #
       #   ==== Example
       #   options: {
@@ -28,7 +28,7 @@ module Protoboard
       #   ====
       #
       # * +fallback+ - A callable object with code to be executed as an alternative plan if the code of the circuit fails
-      def register_circuits(circuit_methods, on_before: [], on_after: [], options:, fallback: nil)
+      def register_circuits(circuit_methods, on_before: [], on_after: [], options:, fallback: nil, singleton_methods: [])
         Protoboard::Helpers::VALIDATE_CALLBACKS.call(on_before)
         Protoboard::Helpers::VALIDATE_CALLBACKS.call(on_after)
 
@@ -38,7 +38,8 @@ module Protoboard
             fallback: fallback,
             on_before: on_before,
             on_after: on_after
-          )
+          ),
+          singleton_methods
         )
 
         circuits.each do |circuit|
@@ -46,7 +47,10 @@ module Protoboard
         end
 
         proxy_module = Protoboard::CircuitBreaker.create_circuit_proxy(circuits, name)
-        prepend proxy_module
+
+        prepend proxy_module::InstanceMethods
+
+        singleton_class.prepend proxy_module::ClassMethods
       end
     end
 
@@ -83,7 +87,7 @@ module Protoboard
 
       ##
       # Creates a new +circuit+.
-      def create_circuits(circuit_methods, options)
+      def create_circuits(circuit_methods, options, singleton_methods)
         circuit_hash = case circuit_methods
                        when Array
                          circuit_methods.reduce({}) do |memo, value|
@@ -94,8 +98,14 @@ module Protoboard
                        else
                          raise ArgumentError, 'Invalid input for circuit methods'
                        end
+
         circuit_hash.map do |circuit_method, circuit_name|
-          Circuit.new({ name: circuit_name, method_name: circuit_method }.merge(options))
+          Circuit.new({
+            name: circuit_name,
+            method_name: circuit_method
+          }
+          .merge(options)
+          .merge(singleton_method: singleton_methods.include?(circuit_method.to_sym)))
         end
       end
 
