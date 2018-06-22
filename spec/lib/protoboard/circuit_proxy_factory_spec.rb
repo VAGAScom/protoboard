@@ -38,7 +38,7 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       it 'returns a module proxying the methods' do
         is_expected.to eq(Protoboard::SomeMethodSomeMethod2FooBarCircuitProxy)
 
-        expect(subject.instance_methods).to include(:some_method, :some_method2)
+        expect(subject.const_get('InstanceMethods').instance_methods).to include(:some_method, :some_method2)
       end
     end
 
@@ -48,7 +48,7 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       it 'returns a module proxying the methods' do
         is_expected.to eq(Protoboard::SomeMethodSomeMethod2FooBarCircuitProxy)
 
-        expect(subject.instance_methods).to include(:some_method, :some_method2)
+        expect(subject::InstanceMethods.instance_methods).to include(:some_method, :some_method2)
       end
     end
 
@@ -58,11 +58,59 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       create_module
 
       class FooBar
-        prepend Protoboard::SomeMethodSomeMethod2FooBarCircuitProxy
+        prepend Protoboard::SomeMethodSomeMethod2FooBarCircuitProxy::InstanceMethods
         def some_method; end
       end
 
       FooBar.new.some_method
+    end
+
+    context 'when singleton_methods are passed' do
+      let(:circuit1) do
+        Protoboard::Circuit.new(
+          name: 'my_cool_service#some_singleton_method',
+          service: 'my_cool_service',
+          method_name: 'some_singleton_method',
+          timeout: 1,
+          open_after: 2,
+          cool_off_after: 3,
+          singleton_method: true
+        )
+      end
+
+      it 'defines a proxy for the given methods' do
+        expect(Protoboard::Adapters::StoplightAdapter).to receive(:run_circuit).once
+
+        create_module
+
+        class FooBar
+          prepend Protoboard::SomeSingletonMethodSomeMethod2FooBarCircuitProxy::InstanceMethods
+
+          class << self
+            prepend Protoboard::SomeSingletonMethodSomeMethod2FooBarCircuitProxy::ClassMethods
+            def some_singleton_method; end
+          end
+        end
+
+        FooBar.some_singleton_method
+      end
+
+      it 'runs the code from the singleton_method' do
+        create_module
+
+        class FooBar
+          prepend Protoboard::SomeSingletonMethodSomeMethod2FooBarCircuitProxy::InstanceMethods
+
+          class << self
+            prepend Protoboard::SomeSingletonMethodSomeMethod2FooBarCircuitProxy::ClassMethods
+            def some_singleton_method
+              'OK'
+            end
+          end
+        end
+
+        expect(FooBar.some_singleton_method).to eq('OK')
+      end
     end
   end
 end

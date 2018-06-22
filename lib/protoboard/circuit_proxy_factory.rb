@@ -12,13 +12,31 @@ module Protoboard
         module_name = infer_module_name(class_name, circuits.map(&:method_name))
         proxy_module = Module.new
 
-        proxy_module.instance_exec do
+        # Encapsulates instance methods in a module to be used later
+        instance_methods = Module.new do
           circuits.each do |circuit|
-            define_method(circuit.method_name) do |*args|
-              Protoboard.config.adapter.run_circuit(circuit) { super(*args) }
+            unless circuit.singleton_method?
+              define_method(circuit.method_name) do |*args|
+                Protoboard.config.adapter.run_circuit(circuit) { super(*args) }
+              end
             end
           end
         end
+
+        proxy_module.const_set('InstanceMethods', instance_methods)
+
+        # Encapsulates singleton methods in a module to be used later
+        class_methods = Module.new do
+          circuits.each do |circuit|
+            if circuit.singleton_method?
+              define_method(circuit.method_name) do |*args|
+                Protoboard.config.adapter.run_circuit(circuit) { super(*args) }
+              end
+            end
+          end
+        end
+
+        proxy_module.const_set('ClassMethods', class_methods)
 
         Protoboard.const_set(module_name, proxy_module)
       end
