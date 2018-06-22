@@ -13,34 +13,30 @@ module Protoboard
         proxy_module = Module.new
 
         # Encapsulates instance methods in a module to be used later
-        proxy_module.instance_exec do
-          instance_methods = Module.new do
-            circuits.each do |circuit|
-              unless circuit.singleton_method?
-                define_method(circuit.method_name) do |*args|
-                  Protoboard.config.adapter.run_circuit(circuit) { super(*args) }
-                end
+        instance_methods = Module.new do
+          circuits.each do |circuit|
+            unless circuit.singleton_method?
+              define_method(circuit.method_name) do |*args|
+                Protoboard.config.adapter.run_circuit(circuit) { super(*args) }
               end
             end
           end
-
-          proxy_module.const_set('InstanceMethods', instance_methods)
         end
+
+        proxy_module.const_set('InstanceMethods', instance_methods)
 
         # Encapsulates singleton methods in a module to be used later
-        proxy_module.instance_exec do
-          class_methods = Module.new do
-            circuits.each do |circuit|
-              if circuit.singleton_method?
-                define_method(circuit.method_name) do |*args|
-                  Protoboard.config.adapter.run_circuit(circuit) { super(*args) }
-                end
+        class_methods = Module.new do
+          circuits.each do |circuit|
+            if circuit.singleton_method?
+              define_method(circuit.method_name) do |*args|
+                Protoboard.config.adapter.run_circuit(circuit) { super(*args) }
               end
             end
           end
-
-          proxy_module.const_set('ClassMethods', class_methods)
         end
+
+        proxy_module.const_set('ClassMethods', class_methods)
 
         Protoboard.const_set(module_name, proxy_module)
       end
