@@ -9,7 +9,6 @@ RSpec.describe Protoboard::CircuitProxyFactory do
         name: 'my_cool_service#some_method',
         service: 'my_cool_service',
         method_name: 'some_method',
-        timeout: 1,
         open_after: 2,
         cool_off_after: 3
       )
@@ -20,7 +19,6 @@ RSpec.describe Protoboard::CircuitProxyFactory do
         name: 'my_cool_service#some_method2',
         service: 'my_cool_service',
         method_name: 'some_method2',
-        timeout: 1,
         open_after: 2,
         cool_off_after: 3
       )
@@ -71,7 +69,6 @@ RSpec.describe Protoboard::CircuitProxyFactory do
           name: 'my_cool_service#some_singleton_method',
           service: 'my_cool_service',
           method_name: 'some_singleton_method',
-          timeout: 1,
           open_after: 2,
           cool_off_after: 3,
           singleton_method: true
