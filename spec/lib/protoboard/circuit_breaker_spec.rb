@@ -24,7 +24,6 @@ RSpec.describe Protoboard::CircuitBreaker do
           register_circuits [:some_method],
                             options: {
                               service: 'my_cool_service',
-                              timeout: 1,
                               open_after: 2,
                               cool_off_after: 3
                             }
@@ -44,7 +43,6 @@ RSpec.describe Protoboard::CircuitBreaker do
           name: 'my_cool_service/Foo1#some_method',
           service: 'my_cool_service',
           method_name: :some_method,
-          timeout: 1,
           open_after: 2,
           cool_off_after: 3
         )
@@ -59,7 +57,6 @@ RSpec.describe Protoboard::CircuitBreaker do
                               singleton_methods: [:some_singleton_method],
                               options: {
                                 service: 'my_cool_service',
-                                timeout: 1,
                                 open_after: 2,
                                 cool_off_after: 3
                               }
@@ -81,7 +78,6 @@ RSpec.describe Protoboard::CircuitBreaker do
             name: 'my_cool_service/Foo1#some_singleton_method',
             service: 'my_cool_service',
             method_name: :some_singleton_method,
-            timeout: 1,
             open_after: 2,
             cool_off_after: 3
           )
@@ -103,7 +99,6 @@ RSpec.describe Protoboard::CircuitBreaker do
             name: "#{namespace}/my_cool_service/Foo1#some_method",
             service: 'my_cool_service',
             method_name: :some_method,
-            timeout: 1,
             open_after: 2,
             cool_off_after: 3
           )
@@ -119,7 +114,6 @@ RSpec.describe Protoboard::CircuitBreaker do
               register_circuits({ some_method: 'my_custom_circuit_name' },
                                 options: {
                                   service: 'my_cool_service',
-                                  timeout: 1,
                                   open_after: 2,
                                   cool_off_after: 3
                                 })
@@ -137,7 +131,6 @@ RSpec.describe Protoboard::CircuitBreaker do
               name: 'my_custom_circuit_name',
               service: 'my_cool_service',
               method_name: :some_method,
-              timeout: 1,
               open_after: 2,
               cool_off_after: 3
             )
@@ -153,7 +146,6 @@ RSpec.describe Protoboard::CircuitBreaker do
                                 singleton_methods: [:some_singleton_method],
                                 options: {
                                   service: 'my_cool_service',
-                                  timeout: 1,
                                   open_after: 2,
                                   cool_off_after: 3
                                 })
@@ -171,7 +163,6 @@ RSpec.describe Protoboard::CircuitBreaker do
               name: 'my_custom_circuit_name',
               service: 'my_cool_service',
               method_name: :some_singleton_method,
-              timeout: 1,
               open_after: 2,
               cool_off_after: 3
             )
@@ -191,7 +182,6 @@ RSpec.describe Protoboard::CircuitBreaker do
                               on_after: [->(_) {}, ->(_) {}],
                               options: {
                                 service: 'my_cool_service',
-                                timeout: 1,
                                 open_after: 2,
                                 cool_off_after: 3
                               })
@@ -209,7 +199,6 @@ RSpec.describe Protoboard::CircuitBreaker do
             name: 'my_custom_circuit_name',
             service: 'my_cool_service',
             method_name: :some_method,
-            timeout: 1,
             open_after: 2,
             cool_off_after: 3,
             on_before: [->(_) {}, ->(_) {}],
@@ -228,7 +217,6 @@ RSpec.describe Protoboard::CircuitBreaker do
                               on_after: [-> {}, 'not_a_callback'],
                               options: {
                                 service: 'my_cool_service',
-                                timeout: 1,
                                 open_after: 2,
                                 cool_off_after: 3
                               })
@@ -252,7 +240,6 @@ RSpec.describe Protoboard::CircuitBreaker do
           register_circuits %i[some_method1 some_method2],
                             options: {
                               service: 'my_cool_service',
-                              timeout: 1,
                               open_after: 2,
                               cool_off_after: 3
                             }
@@ -272,7 +259,6 @@ RSpec.describe Protoboard::CircuitBreaker do
           name: 'my_cool_service/Foo2#some_method1',
           service: 'my_cool_service',
           method_name: :some_method1,
-          timeout: 1,
           open_after: 2,
           cool_off_after: 3
         )
@@ -282,7 +268,6 @@ RSpec.describe Protoboard::CircuitBreaker do
           name: 'my_cool_service/Foo2#some_method2',
           service: 'my_cool_service',
           method_name: :some_method2,
-          timeout: 1,
           open_after: 2,
           cool_off_after: 3
         )
@@ -296,7 +281,6 @@ RSpec.describe Protoboard::CircuitBreaker do
         register_circuits [:some_method],
                           options: {
                             service: 'my_cool_service',
-                            timeout: 1,
                             open_after: 2,
                             cool_off_after: 3
                           }
@@ -317,7 +301,6 @@ RSpec.describe Protoboard::CircuitBreaker do
                             singleton_methods: [:some_singleton_method],
                             options: {
                               service: 'my_cool_service',
-                              timeout: 1,
                               open_after: 2,
                               cool_off_after: 3
                             }
@@ -342,7 +325,6 @@ RSpec.describe Protoboard::CircuitBreaker do
                               fallback: ->(_e) { 'Not Nice' },
                               options: {
                                 service: 'my_cool_fallback',
-                                timeout: 1,
                                 open_after: 2,
                                 cool_off_after: 3
                               }
@@ -363,7 +345,6 @@ RSpec.describe Protoboard::CircuitBreaker do
                               fallback: ->(_e) { 'Not Nice' },
                               options: {
                                 service: 'my_cool_fallback2',
-                                timeout: 1,
                                 open_after: 2,
                                 cool_off_after: 3
                               }
@@ -396,7 +377,6 @@ RSpec.describe Protoboard::CircuitBreaker do
           register_circuits [:some_method],
                             options: {
                               service: 'my_service_name',
-                              timeout: 1,
                               open_after: 2,
                               cool_off_after: 3
                             }
@@ -425,7 +405,6 @@ RSpec.describe Protoboard::CircuitBreaker do
           register_circuits({ some_method: 'my_custom_name', other_method: 'my_other_custom_name' },
                             options: {
                               service: 'my_service_name',
-                              timeout: 1,
                               open_after: 2,
                               cool_off_after: 3
                             })
@@ -460,7 +439,6 @@ RSpec.describe Protoboard::CircuitBreaker do
             register_circuits({ some_method: 'my_custom_name', other_method: 'my_other_custom_name' },
                               options: {
                                 service: 'my_service_name',
-                                timeout: 1,
                                 open_after: 2,
                                 cool_off_after: 3
                               })
@@ -491,7 +469,6 @@ RSpec.describe Protoboard::CircuitBreaker do
               register_circuits({ some_method: 'my_custom_name', other_method: 'my_other_custom_name' },
                                 options: {
                                   service: 'my_service_name',
-                                  timeout: 1,
                                   open_after: 2,
                                   cool_off_after: 3
                                 })

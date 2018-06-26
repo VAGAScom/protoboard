@@ -9,7 +9,6 @@ RSpec.describe Protoboard::Adapters::StoplightAdapter do
         name: 'my_cool_service#some_method',
         service: 'my_cool_service',
         method_name: 'some_method',
-        timeout: 1,
         open_after: 2,
         cool_off_after: 3
       )
@@ -65,7 +64,6 @@ RSpec.describe Protoboard::Adapters::StoplightAdapter do
           name: 'my_cool_circuit_with_callbacks',
           service: 'my_cool_service',
           method_name: 'some_method',
-          timeout: 1,
           open_after: 2,
           cool_off_after: 3,
           on_before: [->(circuit_execution) { some_action.call(circuit_execution.state) }]
@@ -86,7 +84,6 @@ RSpec.describe Protoboard::Adapters::StoplightAdapter do
           name: 'my_cool_circuit_with_callbacks',
           service: 'my_cool_service',
           method_name: 'some_method',
-          timeout: 1,
           open_after: 2,
           cool_off_after: 3,
           on_after: [->(circuit_execution) { some_action.call(circuit_execution.state) }]
@@ -126,7 +123,6 @@ RSpec.describe Protoboard::Adapters::StoplightAdapter do
           name: 'my_cool_circuit_with_callbacks',
           service: 'my_cool_service',
           method_name: 'some_method',
-          timeout: 1,
           open_after: 2,
           cool_off_after: 3,
           on_after: [->(circuit_execution) { some_action.call(circuit_execution.state, 'after') }],
@@ -173,7 +169,6 @@ RSpec.describe Protoboard::Adapters::StoplightAdapter do
           name: 'my_cool_circuit_with_callbacks',
           service: 'my_cool_service',
           method_name: 'some_method',
-          timeout: 1,
           open_after: 2,
           cool_off_after: 3
         )
@@ -226,7 +221,6 @@ RSpec.describe Protoboard::Adapters::StoplightAdapter do
           name: 'my_cool_service#some_method',
           service: 'my_cool_service',
           method_name: 'some_method',
-          timeout: 1,
           open_after: 2,
           cool_off_after: 3
         )
@@ -242,7 +236,6 @@ RSpec.describe Protoboard::Adapters::StoplightAdapter do
           name: 'my_failure_service#some_method',
           service: 'my_cool_service',
           method_name: 'some_method',
-          timeout: 1,
           open_after: 2,
           cool_off_after: 60
         )

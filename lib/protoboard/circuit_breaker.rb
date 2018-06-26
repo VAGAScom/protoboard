@@ -10,7 +10,7 @@ module Protoboard
       #
       # ==== Attributes
       #
-      # * +circuit_methods+ - An array of symbols representing the names of the methods to be on a circuit 
+      # * +circuit_methods+ - An array of symbols representing the names of the methods to be on a circuit
       #   or a hash containing a key with a symbol representing the name of the method and the value as the name of the circuit.
       # * +on_before+ - An array of callable objects with code to be executed before each circuit runs
       # * +on_after+ - An array of callable objects with code to be executed after each circuit runs
