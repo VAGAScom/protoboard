@@ -1,7 +1,7 @@
 # Protoboard
 
 [![Build Status](https://travis-ci.org/VAGAScom/protoboard.svg?branch=master)](https://travis-ci.org/VAGAScom/protoboard)
-
+[![Maintainability](https://api.codeclimate.com/v1/badges/39e7c6f1f5f57b8555ed/maintainability)](https://codeclimate.com/github/VAGAScom/protoboard/maintainability)\
 Protoboard abstracts the way you use Circuit Breaker allowing you to easily use it with any Ruby Object, under the hood it uses the gem [stoplight](https://github.com/orgsync/stoplight) to create the circuits.
 
 
