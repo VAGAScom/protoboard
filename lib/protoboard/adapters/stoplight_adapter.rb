@@ -16,10 +16,6 @@ module Protoboard
         setting :redis_port
       end
 
-      def initialize
-        prepare_data_store
-      end
-
       class << self
         ##
         # This methods is used to make it easier to access adapter configurations
