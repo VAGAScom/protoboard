@@ -40,6 +40,74 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       end
     end
 
+    context 'with a method name containing a bang caracter' do
+      let(:circuit1) do
+        Protoboard::Circuit.new(
+          name: 'my_cool_service#some_method!',
+          service: 'my_cool_service',
+          method_name: 'some_method!',
+          open_after: 2,
+          cool_off_after: 3
+        )
+      end
+      it 'returns a module proxying the methods' do
+        is_expected.to eq(Protoboard::SomeMethodORD33SomeMethod2FooBarCircuitProxy)
+
+        expect(subject.const_get('InstanceMethods').instance_methods).to include(:some_method!, :some_method2)
+      end
+    end
+
+    context 'with a method name containing a equal caracter' do
+      let(:circuit1) do
+        Protoboard::Circuit.new(
+          name: 'my_cool_service#some_method=',
+          service: 'my_cool_service',
+          method_name: 'some_method=',
+          open_after: 2,
+          cool_off_after: 3
+        )
+      end
+      it 'returns a module proxying the methods' do
+        is_expected.to eq(Protoboard::SomeMethodORD61SomeMethod2FooBarCircuitProxy)
+
+        expect(subject.const_get('InstanceMethods').instance_methods).to include(:some_method=, :some_method2)
+      end
+    end
+
+    context 'with a method name like a double equal' do
+      let(:circuit1) do
+        Protoboard::Circuit.new(
+          name: 'my_cool_service#==',
+          service: 'my_cool_service',
+          method_name: '==',
+          open_after: 2,
+          cool_off_after: 3
+        )
+      end
+      it 'returns a module proxying the methods' do
+        is_expected.to eq(Protoboard::ORD61ORD61SomeMethod2FooBarCircuitProxy)
+
+        expect(subject.const_get('InstanceMethods').instance_methods).to include(:==, :some_method2)
+      end
+    end
+
+    context 'with a method name like a spaceship operator' do
+      let(:circuit1) do
+        Protoboard::Circuit.new(
+          name: 'my_cool_service#<=>',
+          service: 'my_cool_service',
+          method_name: '<=>',
+          open_after: 2,
+          cool_off_after: 3
+        )
+      end
+      it 'returns a module proxying the methods' do
+        is_expected.to eq(Protoboard::ORD60ORD61ORD62SomeMethod2FooBarCircuitProxy)
+
+        expect(subject.const_get('InstanceMethods').instance_methods).to include(:<=>, :some_method2)
+      end
+    end
+
     context 'with a class name containing namespace' do
       let(:class_name) { 'Foo::Bar' }
 
