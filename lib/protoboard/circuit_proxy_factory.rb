@@ -46,18 +46,11 @@ module Protoboard
       ##
       # Formats the module name
       def infer_module_name(class_name, methods)
-        methods = methods.map(&:to_s).map { |method| convert_special_chars_to_ordinals(method) }
-        "#{methods.map(&:camelize).join}#{class_name.split('::').join('')}CircuitProxy"
-      end
-
-      def convert_special_chars_to_ordinals(method)
-        special_chars = method.scan(/\W/i)
-        return method if special_chars.empty?
-
-        special_chars.uniq.each do |special_char|
-          method = method.gsub(special_char, "ORD#{special_char.ord}")
+        methods = methods.map(&:to_s).map do |method|
+          method.convert_special_chars_to_ordinals
         end
-        method
+        methods_joined = methods.map { |method| method.camelize }.join
+        "#{methods_joined}#{class_name.split('::').join('')}CircuitProxy"
       end
     end
   end

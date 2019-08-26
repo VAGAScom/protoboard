@@ -36,7 +36,8 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       it 'returns a module proxying the methods' do
         is_expected.to eq(Protoboard::SomeMethodSomeMethod2FooBarCircuitProxy)
 
-        expect(subject.const_get('InstanceMethods').instance_methods).to include(:some_method, :some_method2)
+        expect(subject.const_get('InstanceMethods').instance_methods)
+          .to include(:some_method, :some_method2)
       end
     end
 
@@ -53,7 +54,8 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       it 'returns a module proxying the methods' do
         is_expected.to eq(Protoboard::SomeMethodORD33SomeMethod2FooBarCircuitProxy)
 
-        expect(subject.const_get('InstanceMethods').instance_methods).to include(:some_method!, :some_method2)
+        expect(subject.const_get('InstanceMethods').instance_methods)
+          .to include(:some_method!, :some_method2)
       end
     end
 
@@ -70,7 +72,8 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       it 'returns a module proxying the methods' do
         is_expected.to eq(Protoboard::SomeMethodORD61SomeMethod2FooBarCircuitProxy)
 
-        expect(subject.const_get('InstanceMethods').instance_methods).to include(:some_method=, :some_method2)
+        expect(subject.const_get('InstanceMethods').instance_methods)
+          .to include(:some_method=, :some_method2)
       end
     end
 
@@ -87,7 +90,8 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       it 'returns a module proxying the methods' do
         is_expected.to eq(Protoboard::ORD61ORD61SomeMethod2FooBarCircuitProxy)
 
-        expect(subject.const_get('InstanceMethods').instance_methods).to include(:==, :some_method2)
+        expect(subject.const_get('InstanceMethods').instance_methods)
+          .to include(:==, :some_method2)
       end
     end
 
@@ -104,7 +108,8 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       it 'returns a module proxying the methods' do
         is_expected.to eq(Protoboard::ORD60ORD61ORD62SomeMethod2FooBarCircuitProxy)
 
-        expect(subject.const_get('InstanceMethods').instance_methods).to include(:<=>, :some_method2)
+        expect(subject.const_get('InstanceMethods').instance_methods)
+          .to include(:<=>, :some_method2)
       end
     end
 
@@ -114,12 +119,14 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       it 'returns a module proxying the methods' do
         is_expected.to eq(Protoboard::SomeMethodSomeMethod2FooBarCircuitProxy)
 
-        expect(subject::InstanceMethods.instance_methods).to include(:some_method, :some_method2)
+        expect(subject::InstanceMethods.instance_methods)
+          .to include(:some_method, :some_method2)
       end
     end
 
     it 'defines a proxy for the given methods' do
-      expect(Protoboard::Adapters::StoplightAdapter).to receive(:run_circuit).once
+      expect(Protoboard::Adapters::StoplightAdapter)
+        .to receive(:run_circuit).once
 
       create_module
 
@@ -144,7 +151,8 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       end
 
       it 'defines a proxy for the given methods' do
-        expect(Protoboard::Adapters::StoplightAdapter).to receive(:run_circuit).once
+        expect(Protoboard::Adapters::StoplightAdapter)
+          .to receive(:run_circuit).once
 
         create_module
 
