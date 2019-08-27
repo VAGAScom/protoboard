@@ -41,7 +41,7 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       end
     end
 
-    context 'with a method name containing a bang caracter' do
+    context 'with a method name containing a bang character' do
       let(:circuit1) do
         Protoboard::Circuit.new(
           name: 'my_cool_service#some_method!',
@@ -59,7 +59,7 @@ RSpec.describe Protoboard::CircuitProxyFactory do
       end
     end
 
-    context 'with a method name containing a equal caracter' do
+    context 'with a method name containing a equal character' do
       let(:circuit1) do
         Protoboard::Circuit.new(
           name: 'my_cool_service#some_method=',
@@ -110,6 +110,24 @@ RSpec.describe Protoboard::CircuitProxyFactory do
 
         expect(subject.const_get('InstanceMethods').instance_methods)
           .to include(:<=>, :some_method2)
+      end
+    end
+
+    context 'with a method name containing a question mark character' do
+      let(:circuit1) do
+        Protoboard::Circuit.new(
+          name: 'my_cool_service#some_method?',
+          service: 'my_cool_service',
+          method_name: 'some_method?',
+          open_after: 2,
+          cool_off_after: 3
+        )
+      end
+      it 'returns a module proxying the methods' do
+        is_expected.to eq(Protoboard::SomeMethodORD63SomeMethod2FooBarCircuitProxy)
+
+        expect(subject.const_get('InstanceMethods').instance_methods)
+          .to include(:some_method?, :some_method2)
       end
     end
 
