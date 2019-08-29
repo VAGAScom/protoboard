@@ -46,7 +46,11 @@ module Protoboard
       ##
       # Formats the module name
       def infer_module_name(class_name, methods)
-        "#{methods.map(&:to_s).map { |method| method.camelize }.join}#{class_name.split('::').join('')}CircuitProxy"
+        methods = methods.map(&:to_s).map do |method|
+          method.convert_special_chars_to_ordinals
+        end
+        methods_joined = methods.map { |method| method.camelize }.join
+        "#{methods_joined}#{class_name.split('::').join('')}CircuitProxy"
       end
     end
   end
