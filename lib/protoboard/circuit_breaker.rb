@@ -101,12 +101,13 @@ module Protoboard
                        end
 
         circuit_hash.map do |circuit_method, circuit_name|
-          Circuit.new({
+          args = {
             name: circuit_name,
             method_name: circuit_method,
             singleton_method: singleton_methods.include?(circuit_method.to_sym)
-          }
-          .merge(options))
+          }.merge(options)
+
+          Circuit.new(**args)
         end
       end
 
